@@ -119,6 +119,18 @@
   window.addEventListener('scroll', updateActive, { passive: true });
   updateActive();
 
+  // ---- TOC collapse / expand ----------------------------------------------
+  const tocRail = document.getElementById('tocRail');
+  const tocToggle = document.getElementById('tocToggle');
+  if (tocRail && tocToggle) {
+    const icon = tocToggle.querySelector('.toc-toggle-icon');
+    tocToggle.addEventListener('click', () => {
+      const open = tocRail.classList.toggle('open');
+      tocToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (icon) icon.textContent = open ? '✕' : '☰';
+    });
+  }
+
   // ---- Smooth-scroll for TOC clicks --------------------------------------
   links.forEach(a => {
     a.addEventListener('click', (e) => {
