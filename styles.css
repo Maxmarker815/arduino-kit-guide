@@ -1023,8 +1023,8 @@ details.acc-item .body p:last-child { margin-bottom: 0; }
   transition: width 0.25s ease;
 }
 .toc-rail.open {
-  width: 196px;
-  padding: 16px 14px;
+  width: 244px;
+  padding: 18px 16px;
   overflow-y: auto;
 }
 .toc-toggle {
@@ -1042,11 +1042,11 @@ details.acc-item .body p:last-child { margin-bottom: 0; }
   font-family: inherit;
   white-space: nowrap;
 }
-.toc-toggle-icon { flex-shrink: 0; font-size: 15px; line-height: 1; }
+.toc-toggle-icon { flex-shrink: 0; font-size: 17px; line-height: 1; }
 .toc-toggle-label {
   display: none;
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-2);
@@ -1059,14 +1059,14 @@ details.acc-item .body p:last-child { margin-bottom: 0; }
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-width: 168px;
+  min-width: 212px;
   opacity: 0;
   transition: opacity 0.15s ease;
 }
 .toc-rail.open .toc-inner { opacity: 1; }
 .toc-rail .brand {
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-2);
@@ -1084,7 +1084,7 @@ details.acc-item .body p:last-child { margin-bottom: 0; }
 }
 .toc-rail .product {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: 22px;
   line-height: 1;
   letter-spacing: -0.01em;
   color: var(--ink);
@@ -1094,7 +1094,7 @@ details.acc-item .body p:last-child { margin-bottom: 0; }
 }
 .toc-rail .label {
   font-family: var(--mono);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--ink-3);
@@ -1105,8 +1105,8 @@ details.acc-item .body p:last-child { margin-bottom: 0; }
 }
 .toc-rail nav a {
   display: block;
-  padding: 4px 0 4px 16px;
-  font-size: 11px;
+  padding: 5px 0 5px 18px;
+  font-size: 14px;
   color: var(--ink-2);
   border: 0;
   position: relative;
@@ -1116,8 +1116,8 @@ details.acc-item .body p:last-child { margin-bottom: 0; }
 .toc-rail nav a::before {
   content: '';
   position: absolute;
-  left: 0; top: 9px;
-  width: 8px;
+  left: 0; top: 12px;
+  width: 9px;
   height: 1px;
   background: var(--rule-strong);
 }
@@ -1129,18 +1129,18 @@ details.acc-item .body p:last-child { margin-bottom: 0; }
 .toc-rail nav a.active::before {
   background: var(--signal);
   height: 2px;
-  width: 10px;
-  top: 8px;
+  width: 11px;
+  top: 11px;
 }
-.toc-rail nav a.h2 { padding-left: 28px; font-size: 10.5px; color: var(--ink-3); }
-.toc-rail nav a.h2::before { left: 12px; }
+.toc-rail nav a.h2 { padding-left: 32px; font-size: 13px; color: var(--ink-3); }
+.toc-rail nav a.h2::before { left: 14px; }
 
 .toc-rail .foot {
   padding-top: 12px;
   margin-top: 12px;
   border-top: 1px solid var(--rule);
   font-family: var(--mono);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-3);
