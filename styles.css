@@ -94,7 +94,7 @@ p { margin: 0 0 0.6em; text-wrap: pretty; }
     transition: padding-left 0.25s ease;
   }
   body:has(.toc-rail.open) {
-    padding-left: calc(276px + 24px); /* leave room for expanded TOC */
+    padding-left: calc(300px + 24px); /* leave room for expanded TOC */
   }
   .pages {
     max-width: var(--page-w);
@@ -1024,7 +1024,7 @@ details.acc-item .body p:last-child { margin-bottom: 0; }
   transition: width 0.25s ease;
 }
 .toc-rail.open {
-  width: 276px;
+  width: 300px;
   padding: 18px 16px;
   overflow-y: auto;
 }
@@ -1060,7 +1060,7 @@ details.acc-item .body p:last-child { margin-bottom: 0; }
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-width: 244px;
+  min-width: 268px;
   opacity: 0;
   transition: opacity 0.15s ease;
 }
@@ -1085,7 +1085,7 @@ details.acc-item .body p:last-child { margin-bottom: 0; }
 }
 .toc-rail .product {
   font-family: var(--serif);
-  font-size: 26px;
+  font-size: 28px;
   line-height: 1;
   letter-spacing: -0.01em;
   color: var(--ink);
@@ -1106,8 +1106,8 @@ details.acc-item .body p:last-child { margin-bottom: 0; }
 }
 .toc-rail nav a {
   display: block;
-  padding: 5px 0 5px 20px;
-  font-size: 16px;
+  padding: 5px 0 5px 22px;
+  font-size: 18px;
   color: var(--ink-2);
   border: 0;
   position: relative;
@@ -1117,8 +1117,8 @@ details.acc-item .body p:last-child { margin-bottom: 0; }
 .toc-rail nav a::before {
   content: '';
   position: absolute;
-  left: 0; top: 13px;
-  width: 10px;
+  left: 0; top: 14px;
+  width: 11px;
   height: 1px;
   background: var(--rule-strong);
 }
@@ -1130,11 +1130,11 @@ details.acc-item .body p:last-child { margin-bottom: 0; }
 .toc-rail nav a.active::before {
   background: var(--signal);
   height: 2px;
-  width: 12px;
-  top: 12px;
+  width: 13px;
+  top: 13px;
 }
-.toc-rail nav a.h2 { padding-left: 36px; font-size: 15px; color: var(--ink-3); }
-.toc-rail nav a.h2::before { left: 16px; }
+.toc-rail nav a.h2 { padding-left: 40px; font-size: 16.5px; color: var(--ink-3); }
+.toc-rail nav a.h2::before { left: 18px; }
 
 .toc-rail .foot {
   padding-top: 12px;
