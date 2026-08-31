@@ -1028,16 +1028,24 @@ details.acc-item .body p:last-child { margin-bottom: 0; }
   padding: 18px 16px;
   overflow-y: auto;
 }
+.toc-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+  margin: 0 0 4px;
+  padding: 2px 0 12px;
+}
 .toc-toggle {
   display: flex;
   align-items: center;
   gap: 8px;
-  width: 100%;
   flex-shrink: 0;
   background: none;
   border: 0;
-  margin: 0 0 4px;
-  padding: 2px 0 12px;
+  margin: 0;
+  padding: 0;
   cursor: pointer;
   color: var(--ink);
   font-family: inherit;
@@ -1052,10 +1060,11 @@ details.acc-item .body p:last-child { margin-bottom: 0; }
   text-transform: uppercase;
   color: var(--ink-2);
 }
-.toc-rail.open .toc-toggle {
+.toc-rail.open .toc-head {
   border-bottom: 1px solid var(--rule);
 }
 .toc-rail.open .toc-toggle-label { display: inline; }
+.toc-rail.open .foot { display: block; }
 .toc-inner {
   flex: 1;
   display: flex;
@@ -1137,11 +1146,13 @@ details.acc-item .body p:last-child { margin-bottom: 0; }
 .toc-rail nav a.h2::before { left: 18px; }
 
 .toc-rail .foot {
-  padding-top: 12px;
-  margin-top: 12px;
-  border-top: 1px solid var(--rule);
+  display: none;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  text-align: right;
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-3);
