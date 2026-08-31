@@ -99,7 +99,7 @@ p { margin: 0 0 0.6em; text-wrap: pretty; }
   .pages {
     max-width: var(--page-w);
     margin: 0 auto;
-    zoom: 1.6;              /* только экран: лист крупнее, формат остаётся A4 */
+    zoom: 1.45;              /* только экран: лист крупнее, формат остаётся A4 */
   }
   .page {
     margin: 0 auto 28px;
