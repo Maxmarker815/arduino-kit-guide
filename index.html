@@ -21,6 +21,11 @@
     </g>
   </svg>
 </template>
+<style id="fix7">
+#pg7 .pinout td, #pg7 .pinout th { padding-top:0.9mm; padding-bottom:0.9mm; }
+#pg7 .grid-2 > div + div > p { margin-bottom:0.45em; }
+#pg7 .callout { padding-top:1.5mm; padding-bottom:1.5mm; }
+</style>
 </head>
 <body>
 
@@ -334,7 +339,7 @@
 </section>
 
 <!-- 2.1 + 2.2 -->
-<section class="page">
+<section class="page" id="pg7">
   <div class="runner"><span class="runner-l"><span class="runner-dot"></span> Arduino · Upgraded Learning Kit</span><span class="runner-r">Часть 2 — Быстрый старт</span></div>
   <div class="page-header"><span class="part">2.1 / 2.2 — ПО и драйвер</span><span class="chapter">Часть 2</span></div>
   <h2 class="h-display">Установка<br>и драйвер.</h2>
@@ -361,14 +366,14 @@
     </div>
     <div>
       <h3 class="h-sub" style="margin-top:0;">2.2 — Подключение платы</h3>
-      <p>В&nbsp;большинстве случаев драйверы уже поставились вместе с&nbsp;Arduino IDE (см.&nbsp;пункт 4 слева). Достаточно подключить плату — Windows подхватит её&nbsp;сама.</p>
+      <p>Чаще всего драйвер уже стоит — он ставится вместе с&nbsp;Arduino IDE (пункт&nbsp;4 слева). Подключи плату, Windows подхватит её&nbsp;сама.</p>
       <ol style="font-size:9.5pt; padding-left:5mm; line-height:1.5;">
         <li>Воткни USB-кабель в&nbsp;плату и&nbsp;в&nbsp;ноутбук</li>
         <li>На&nbsp;плате должны загореться светодиоды ON и&nbsp;L</li>
         <li>Открой Arduino IDE → меню «Инструменты» → «Порт»</li>
         <li>Если в&nbsp;списке появился COM-порт (COM3, COM5 и&nbsp;т.п.) — плата определилась, переходи к&nbsp;2.3</li>
       </ol>
-      <div class="callout warn"><span class="ic">!</span><div>Если COM-порта в&nbsp;списке нет — плате не хватает драйвера. Какой именно нужен, зависит от&nbsp;микросхемы-переходника на&nbsp;твоей плате: у&nbsp;разных партий она разная, поэтому сначала посмотри, что у&nbsp;тебя, а&nbsp;уже потом ставь. Как это сделать — в&nbsp;блоке ниже.</div></div><div class="h-label" style="margin-top:2.5mm;">Как узнать, какой драйвер нужен</div><p style="font-size:9pt; line-height:1.35;">Плата общается с&nbsp;компьютером не&nbsp;напрямую: между её&nbsp;процессором и&nbsp;USB-разъёмом стоит отдельная микросхема-переводчик. Именно ей и&nbsp;нужен драйвер, и&nbsp;у&nbsp;разных производителей она разная — отсюда путаница.</p><p style="font-size:9pt; line-height:1.35;">Не&nbsp;отключая плату, открой <strong>Диспетчер устройств</strong> (нажми Win+X и&nbsp;выбери его в&nbsp;меню) и&nbsp;разверни раздел <strong>«Порты (COM и&nbsp;LPT)»</strong>. Название строки прямо скажет, что у&nbsp;тебя стоит:</p><table class="pinout" style="font-size:8.6pt; margin:1.5mm 0;"><thead><tr><th>Что написано</th><th>Чип</th><th>Что ставить</th></tr></thead><tbody><tr><td class="pin">USB Serial Port</td><td>FTDI FT232R</td><td style="white-space:normal;">Драйвер VCP с&nbsp;ftdichip.com/drivers/vcp-drivers</td></tr><tr><td class="pin">USB-SERIAL CH340</td><td>CH340</td><td style="white-space:normal;">CH341SER.EXE с&nbsp;wch-ic.com</td></tr><tr><td class="pin">Arduino Uno</td><td>ATmega16U2</td><td style="white-space:normal;">Ничего, драйвер ставится вместе с&nbsp;IDE</td></tr><tr><td class="pin">Строки нет вообще</td><td>—</td><td style="white-space:normal;">Дело не в&nbsp;драйвере: смени кабель и&nbsp;USB-порт</td></tr></tbody></table><p style="font-size:9pt; line-height:1.35;">Хочешь убедиться наверняка — нажми на&nbsp;строку правой кнопкой, выбери «Свойства» → вкладка «Сведения» → в&nbsp;списке «ИД оборудования». Там появится строка с&nbsp;кодом производителя: <code>VID_0403</code> — это FTDI, <code>VID_1A86</code> — CH340, <code>VID_2341</code> — фирменная Arduino.</p>
+      <div class="callout warn"><span class="ic">!</span><div>Если COM-порта в&nbsp;списке нет — плате не хватает драйвера. Какой именно нужен, зависит от&nbsp;микросхемы-переходника на&nbsp;твоей плате: у&nbsp;разных партий она разная, поэтому сначала посмотри, что у&nbsp;тебя, а&nbsp;уже потом ставь. Как это сделать — в&nbsp;блоке ниже.</div></div><div class="h-label" style="margin-top:2.5mm;">Как узнать, какой драйвер нужен</div><p style="font-size:9pt; line-height:1.35;">Плата общается с&nbsp;компьютером не&nbsp;напрямую: между её&nbsp;процессором и&nbsp;USB-разъёмом стоит отдельная микросхема-переводчик. Именно ей и&nbsp;нужен драйвер, и&nbsp;у&nbsp;разных производителей она разная — отсюда путаница.</p><p style="font-size:9pt; line-height:1.35;">Не&nbsp;отключая плату, открой <strong>Диспетчер устройств</strong> (нажми Win+X и&nbsp;выбери его в&nbsp;меню) и&nbsp;разверни раздел <strong>«Порты (COM и&nbsp;LPT)»</strong>. Название строки прямо скажет, что у&nbsp;тебя стоит:</p><table class="pinout" style="font-size:8.6pt; margin:1.5mm 0;"><thead><tr><th>Что написано</th><th>Чип</th><th>Что ставить</th></tr></thead><tbody><tr><td class="pin">USB Serial Port</td><td>FTDI FT232R</td><td style="white-space:normal;">Драйвер VCP с&nbsp;ftdichip.com/drivers/vcp-drivers</td></tr><tr><td class="pin">USB-SERIAL CH340</td><td>CH340</td><td style="white-space:normal;">CH341SER.EXE с&nbsp;wch-ic.com</td></tr><tr><td class="pin">Arduino Uno</td><td>ATmega16U2</td><td style="white-space:normal;">Ничего, драйвер ставится вместе с&nbsp;IDE</td></tr><tr><td class="pin">Строки нет вообще</td><td>—</td><td style="white-space:normal;">Дело не в&nbsp;драйвере: смени кабель и&nbsp;USB-порт</td></tr></tbody></table><p style="font-size:8.3pt; line-height:1.28; margin-bottom:0;">Хочешь наверняка — правой кнопкой по&nbsp;строке → «Свойства» → «Сведения» → «ИД оборудования». Код производителя: <code>VID_0403</code> — FTDI, <code>VID_1A86</code> — CH340, <code>VID_2341</code> — Arduino.</p>
     </div>
   </div>
   <div class="folio"><span>2.1 / 2.2 — Установка ПО</span><span class="pageno">7</span><span>v1.0</span></div>
