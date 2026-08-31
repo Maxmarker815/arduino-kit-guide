@@ -94,11 +94,12 @@ p { margin: 0 0 0.6em; text-wrap: pretty; }
     transition: padding-left 0.25s ease;
   }
   body:has(.toc-rail.open) {
-    padding-left: calc(220px + 20px); /* leave room for expanded TOC */
+    padding-left: calc(276px + 24px); /* leave room for expanded TOC */
   }
   .pages {
     max-width: var(--page-w);
     margin: 0 auto;
+    zoom: 1.2;              /* только экран: лист крупнее, формат остаётся A4 */
   }
   .page {
     margin: 0 auto 28px;
