@@ -407,6 +407,21 @@
       </g>
     `),
 
+    pin_header: v(`
+      <rect x="8" y="20" width="44" height="7" fill="${INK}" stroke="${INK}" stroke-width="0.8"/>
+      <g stroke="${INK}" stroke-width="1.1">
+        <line x1="12" y1="20" x2="12" y2="10"/><line x1="17" y1="20" x2="17" y2="10"/>
+        <line x1="22" y1="20" x2="22" y2="10"/><line x1="27" y1="20" x2="27" y2="10"/>
+        <line x1="32" y1="20" x2="32" y2="10"/><line x1="37" y1="20" x2="37" y2="10"/>
+        <line x1="42" y1="20" x2="42" y2="10"/><line x1="47" y1="20" x2="47" y2="10"/>
+      </g>
+      <g stroke="${INK}" stroke-width="0.9">
+        <line x1="12" y1="27" x2="12" y2="31"/><line x1="17" y1="27" x2="17" y2="31"/>
+        <line x1="22" y1="27" x2="22" y2="31"/><line x1="27" y1="27" x2="27" y2="31"/>
+        <line x1="32" y1="27" x2="32" y2="31"/><line x1="37" y1="27" x2="37" y2="31"/>
+        <line x1="42" y1="27" x2="42" y2="31"/><line x1="47" y1="27" x2="47" y2="31"/>
+      </g>
+    `),
     keypad: v(`
       <rect x="10" y="4" width="40" height="32" rx="1" fill="#1a1814" stroke="${INK}" stroke-width="0.8"/>
       <g fill="${T_RED}" stroke="${INK}" stroke-width="0.3" font-family="JetBrains Mono, monospace" font-size="3" text-anchor="middle">
