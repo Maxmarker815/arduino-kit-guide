@@ -915,19 +915,19 @@ table.pinout td.target {
 /* =========================================================================
    ACCORDION (troubleshoot / ideas)
    ========================================================================= */
-.acc { margin-top: 2mm; }
+.acc { margin-top: 1.5mm; }
 details.acc-item {
   border-bottom: 0.4px solid var(--rule);
 }
 details.acc-item summary {
   list-style: none;
   cursor: pointer;
-  padding: 2mm 0;
+  padding: 1.3mm 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-family: var(--sans);
-  font-size: 9pt;
+  font-size: 8.3pt;
   font-weight: 500;
   color: var(--ink);
   gap: 4mm;
@@ -936,16 +936,16 @@ details.acc-item summary::-webkit-details-marker { display: none; }
 details.acc-item summary .plus {
   font-family: var(--mono);
   color: var(--signal);
-  font-size: 12pt;
+  font-size: 10pt;
   font-weight: 400;
   transition: transform 0.2s;
   flex-shrink: 0;
 }
 details.acc-item[open] summary .plus { transform: rotate(45deg); }
 details.acc-item .body {
-  padding: 0 0 3mm;
-  font-size: 9pt;
-  line-height: 1.5;
+  padding: 0 0 2.2mm;
+  font-size: 8.3pt;
+  line-height: 1.4;
   color: var(--ink-2);
 }
 details.acc-item .body p:last-child { margin-bottom: 0; }
@@ -957,13 +957,13 @@ details.acc-item .body p:last-child { margin-bottom: 0; }
   gap: 0;
   background: var(--rule);
   border: 0.5px solid var(--rule-strong);
-  margin: 2mm 0 4mm;
+  margin: 1.5mm 0 3mm;
 }
 .idea {
   background: var(--paper);
-  padding: 2.5mm 3.5mm;
-  font-size: 8.5pt;
-  line-height: 1.35;
+  padding: 1.8mm 2.6mm;
+  font-size: 8pt;
+  line-height: 1.3;
   color: var(--ink-2);
   display: flex;
   gap: 2.5mm;
