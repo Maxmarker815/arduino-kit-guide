@@ -901,7 +901,7 @@ table.pinout td.target {
   white-space: pre;
   tab-size: 2;
   font-size: 7.5pt;
-  line-height: 1.5;
+  line-height: 1.32;
 }
 .code .kw  { color: #FF8B5C; }
 .code .ty  { color: #79C7D6; }
