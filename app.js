@@ -106,11 +106,21 @@
     return { a, el: document.getElementById(id) };
   }).filter(t => t.el);
 
+  // Позиция элемента в документе. getBoundingClientRect учитывает CSS zoom,
+  // а offsetTop — нет, поэтому при zoom на .pages offsetTop промахивается.
+  function docTop(el) { return el.getBoundingClientRect().top + window.scrollY; }
+
+  let tops = [];
+  function measureTops() { tops = targets.map(t => docTop(t.el)); }
+  measureTops();
+  window.addEventListener('resize', measureTops);
+  window.addEventListener('load', measureTops);
+
   function updateActive() {
     const y = window.scrollY + 200;
     let current = targets[0];
-    for (const t of targets) {
-      if (t.el.offsetTop <= y) current = t;
+    for (let i = 0; i < targets.length; i++) {
+      if (tops[i] <= y) current = targets[i];
       else break;
     }
     links.forEach(a => a.classList.remove('active'));
@@ -139,7 +149,7 @@
       const el = document.querySelector(href);
       if (!el) return;
       e.preventDefault();
-      window.scrollTo({ top: el.offsetTop - 24, behavior: 'smooth' });
+      window.scrollTo({ top: docTop(el) - 24, behavior: 'smooth' });
       history.replaceState(null, '', href);
     });
   });
