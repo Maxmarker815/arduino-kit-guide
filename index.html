@@ -1536,7 +1536,7 @@ image-slot[data-filled]{cursor:zoom-in}
     if (overlay) { overlay.remove(); return; }
     var path = e.composedPath();
     if (path.some(function(el){ return el.classList && (el.classList.contains('ctl') || el.classList.contains('handle') || el.classList.contains('spill') || el.classList.contains('empty')); })) return;
-    var inPage = path.some(function(el){ return el.classList && el.classList.contains('page'); });
+    var inPage = path.some(function(el){ return el.classList && (el.classList.contains('page') || el.classList.contains('pages')); });
     if (!inPage) return;
     var slotHost = path.find(function(el){ return el.tagName === 'IMAGE-SLOT'; });
     if (slotHost && !slotHost.hasAttribute('data-filled')) return;
