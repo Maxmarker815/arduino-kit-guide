@@ -577,6 +577,22 @@ body{ background:#FAF8F5 !important; color:#211D19 !important; }
 /* Крупная цифра урока: в теме она светло-синяя. */
 .lesson .proj-num, .lesson .num{ color:#DCD3C6 !important; }
 
+/* Подсветка чисел в коде (app.js оборачивает их в тот же класс .num, что
+   у крупной цифры урока «01», «13»…) — из-за совпадения имени класса
+   правило выше и мобильное .lesson .num{font-size:64px} из theme.css
+   красили и раздували числа внутри блоков кода до нечитаемого размера
+   на телефоне. Более специфичный селектор всегда побеждает оба. */
+.lesson .code .num{
+  font-family: var(--mono) !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  color: #D8A8FF !important;
+  letter-spacing: normal !important;
+  line-height: 1.32 !important;
+  margin-top: 0 !important;
+  font-size: 7.5pt !important;
+}
+
 /* Верхний блок на главной: внутри него тема держит свой набор светлых
    переменных, и они были сиренево-синие — на угольном фоне подписи
    выглядели холодным пятном. Здесь тот же набор, только тёплый. */
