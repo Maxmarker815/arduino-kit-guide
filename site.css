@@ -575,6 +575,11 @@ body.hdr-away .c-rail-brand{
             border-left-color:#D9C6AC !important; }
 .c-item.on .c-n{ color:#D9C6AC !important; }
 .c-rail-h{ color:#A0968A !important; }
+/* Отступ пункта слева на компьютере. Тема даёт 16px (18px от 1400), и до
+   номера проекта получался заметный пустой промежуток. 12px — ближе к
+   краю, но не впритык; на телефоне своё правило в course.html (10px),
+   оно подключено позже и остаётся в силе. У темы !important — здесь тоже. */
+.c-item{ padding-left:12px !important; }
 body.hdr-away .c-rail-brand:hover{ background:#2C2723 !important; }
 .c-rail-brand .brand-mark{ color:#D9C6AC !important; }
 
