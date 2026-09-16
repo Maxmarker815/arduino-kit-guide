@@ -359,24 +359,28 @@ body.hdr-away .c-top .c-btn:hover{ color:#16233D !important; }
 
   /* Спрятанный нативный скроллбар не намекает, что строку можно тянуть
      пальцем вбок — «Если не работает» и «Совсем не идёт» просто обрезаны
-     и не видны. Кружок со стрелкой прилипает к правому краю прямо внутри
+     и не видны. Стрелка приклеена к правому краю прямо внутри
      прокручиваемой строки (position:sticky, без добавления тегов в
      course.html — псевдоэлемент сам становится последним во flex-ряду).
-     Три варианта отрендерены и показаны владельцу, выбран этот. */
+     Три варианта отрендерены и показаны владельцу; сперва выбрали кружок,
+     потом заменили на эту — она гаснет, когда долистали до конца строки
+     (класс .at-end ставит скрипт в course.html), кружок просто торчал бы
+     и после того, как подсказывать уже нечего. */
   body.course .lesson .l-toc::after{
     content:'';
     position:sticky; right:0; flex:0 0 auto;
-    width:24px; height:24px; margin-left:10px;
-    border-radius:50%;
-    background-color:var(--paper);
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234C443B' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E");
-    background-repeat:no-repeat; background-position:center; background-size:12px 12px;
-    border:1px solid var(--rule-strong);
-    /* Лёгкая тень слева — та же подсказка «текст тут обрезан», что и
-       у затухания в других вариантах, только вокруг самого кружка. */
-    box-shadow:-8px 0 10px -6px var(--paper);
+    width:30px; height:22px; margin-left:2px;
     pointer-events:none;
+    background-repeat:no-repeat, no-repeat;
+    background-position:right center, center;
+    background-size:16px 16px, 100% 100%;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234C443B' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E"),
+      linear-gradient(to right, transparent, var(--paper) 70%);
+    /* Одна длительность на все переходы сайта (--hdr-fade). */
+    transition:opacity .35s ease;
   }
+  body.course .lesson .l-toc.at-end::after{ opacity:0; }
 }
 @media(max-width:820px){
   body.course .lesson .proj-stats{ grid-template-columns:1fr 1fr !important; }

@@ -13,8 +13,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="theme.css?v=1789557357">
-<link rel="stylesheet" href="site.css?v=1789557357">
+<link rel="stylesheet" href="theme.css?v=1789557729">
+<link rel="stylesheet" href="site.css?v=1789557729">
 <style>
 /* =====================================================================
    УРОКИ. Текст взят из печатной книги без изменений; здесь снимается
@@ -1587,7 +1587,31 @@ void loop() {
 })();
 </script>
 
-<script src="kit.js?v=1789557357"></script>
+<script>
+/* =====================================================================
+   ОГЛАВЛЕНИЕ УРОКА: СТРЕЛКА ГАСНЕТ У КОНЦА СТРОКИ
+
+   На узких экранах .l-toc — одна строка с прокруткой вбок (site.css),
+   и к ней приклеена стрелка (::after, position:sticky). Как только
+   долистали до конца — подсказывать больше нечего, класс .at-end гасит
+   её через прозрачность (тоже в site.css). У каждого из 17 проектов
+   своя строка .l-toc, слушатель прокрутки вешаем на каждую отдельно.
+   ===================================================================== */
+(function(){
+  function bind(toc){
+    function update(){
+      var atEnd = toc.scrollLeft + toc.clientWidth >= toc.scrollWidth - 2;
+      toc.classList.toggle('at-end', atEnd);
+    }
+    toc.addEventListener('scroll', update, {passive:true});
+    window.addEventListener('resize', update);
+    update();
+  }
+  document.querySelectorAll('.l-toc').forEach(bind);
+})();
+</script>
+
+<script src="kit.js?v=1789557729"></script>
 <script src="image-slot.js"></script>
 <script src="icons.js"></script>
 <script src="app.js"></script>
