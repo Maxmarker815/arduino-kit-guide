@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<title>Arduino Upgraded Learning Kit — уроки</title>
+<meta name="robots" content="noindex, nofollow">
+<!-- Авторские права © 2025 Maxmarker. Все права защищены. Коммерческое использование запрещено без письменного разрешения. -->
+<link rel="icon" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="site.css">
+<style>
+/* =====================================================================
+   УРОКИ. Текст взят из печатной книги без изменений; здесь снимается
+   только жёсткий формат листа А4, чтобы текст тёк по ширине экрана.
+
+   ФАЙЛ СОБИРАЕТСЯ СКРИПТОМ. Правки вносить сюда, в шаблон, а не в
+   course.html — он перезаписывается при каждой сборке.
+   ===================================================================== */
+html,body{margin:0;padding:0}
+body.course{background:var(--paper);padding:0!important;font-family:var(--sans)}
+
+/* лист А4 -> обычный поток */
+body.course .pages{max-width:none;margin:0;zoom:1}
+body.course .page{width:auto;height:auto;overflow:visible;box-shadow:none;
+  margin:0;padding:0;background:transparent;page-break-after:auto;break-after:auto}
+body.course .page::before{display:none}
+body.course .runner,body.course .folio{display:none}
+body.course .toc-rail,body.course .progress-rail{display:none!important}
+
+/* ---------- шапка ---------- */
+:root{ --top-h:78px }
+.c-top{position:sticky;top:0;z-index:60;background:#040057;border-bottom:1px solid rgba(255,255,255,.10)}
+.c-top-in{display:flex;align-items:center;gap:14px;padding:0 30px;min-height:var(--top-h)}
+.c-sp{flex:1}
+.c-btn{border:1px solid var(--rule-strong);background:var(--paper-2);color:var(--ink);padding:9px 16px;
+  border-radius:8px;font-family:var(--sans);font-size:13.5px;font-weight:500;cursor:pointer;
+  text-decoration:none;display:inline-block;transition:.12s}
+.c-btn:hover{background:var(--paper-3);border-color:var(--accent);color:var(--ink)}
+.c-burger{display:none}
+
+/* Надпись на кнопке возврата укорачивается в двух случаях: на телефоне
+   (иначе она переносится на вторую строку и распирает шапку) и когда шапка
+   уехала при прокрутке — там справа от колонки урока остаётся около 105
+   пикселей, и полная надпись вылезает на текст. Переключение классами,
+   а не переписыванием текста: так надпись не может «застрять» короткой. */
+.bl-short{display:none}
+body.hdr-away .bl-full{display:none}
+body.hdr-away .bl-short{display:inline}
+
+/* Название набора текстом — тот же знак и та же надпись, что на главной. */
+.c-brand{font-family:var(--sans)!important;font-weight:600!important;font-size:20px!important;
+  letter-spacing:-.015em!important;line-height:1;display:flex!important;align-items:center!important;
+  gap:11px!important;text-decoration:none!important;border-bottom:0!important;flex:0 0 auto!important}
+.c-brand .brand-mark{width:30px;height:30px;flex:0 0 30px;color:#8FB8FF;display:block}
+.c-brand .brand-txt{display:block;white-space:nowrap}
+.c-brand .brand-txt b{font-weight:700}
+@media(min-width:1400px){ .c-brand{font-size:22px!important} }
+@media(max-width:600px){
+  /* Шапка урока на телефоне: три вещи в ряд — меню, название, возврат.
+     Место здесь самое тесное на сайте, поэтому и название, и отступы,
+     и кнопка ужимаются. «Все проекты» в две строки распирало шапку
+     вдвое — остаётся «Проекты». */
+  .c-brand{font-size:16px!important}
+  .c-brand .brand-mark{width:22px;height:22px;flex:0 0 22px}
+  .c-top-in{padding:0 10px;gap:7px}
+  .bl-full{display:none}
+  .bl-short{display:inline}
+  .c-btn{padding:8px 12px;font-size:13px}
+}
+@media(max-width:359px){ .c-brand .brand-rest{display:none} }
+
+/* Знак в рельсе — для состояния, когда шапка уехала при прокрутке вниз
+   (см. скрипт ниже). Тогда в шапке знака нет, а этот приколот к верху
+   тёмной рельсы, и список уроков уезжает под него. */
+/* Размеры знака в рельсе заданы безусловно, а не только для состояния
+   «шапка уехала». Иначе в момент переключения класса знак прыгал с 30
+   пикселей на 20 прямо посреди плавного проявления. */
+.c-rail-brand{text-decoration:none!important;gap:9px!important;
+  font-family:var(--sans)!important;font-weight:600!important;
+  font-size:14.5px!important;letter-spacing:-.01em!important;color:#FFF!important}
+.c-rail-brand .brand-mark{width:20px;height:20px;flex:0 0 20px;color:#8FB8FF;display:block}
+
+/* ---------- каркас ---------- */
+.c-shell{display:flex;align-items:flex-start;gap:0}
+.c-rail{position:sticky;top:var(--top-h);flex:0 0 264px;height:calc(100vh - var(--top-h));overflow-y:auto;
+  border-right:1px solid rgba(255,255,255,.09);background:#040057;padding:0 0 44px}
+/* Сверху у рельсы отступа НЕТ намеренно: список должен начинаться сразу,
+   иначе первая строчка читается как более высокая, чем остальные.
+   Снизу 44px — чтобы последний пункт не лип к краю окна. */
+.c-item{display:flex;align-items:baseline;gap:11px;padding:11px 22px;text-decoration:none;
+  color:var(--ink-2);border-left:3px solid transparent;font-size:15px;line-height:1.35}
+.c-item:hover{background:var(--paper-3);color:var(--ink)}
+.c-item.on{background:var(--paper-3);color:var(--ink);border-left-color:var(--accent);font-weight:600}
+.c-n{font-family:var(--mono);font-size:12px;color:var(--ink-3);flex:0 0 22px}
+.c-item.on .c-n{color:var(--ink)}
+.c-t{flex:1}
+.c-ok{flex:0 0 16px;text-align:right;font-size:13.5px;color:var(--green);font-weight:700}
+@media(min-width:1400px){ .c-rail{flex:0 0 276px} .c-item{font-size:15px;padding:11px 24px}
+  :root{--top-h:84px} }
+@media(min-width:1700px){ .c-rail{flex:0 0 286px} .c-item{font-size:17px} }
+/* ШИРИНА РЕЛЬСЫ (264 / 276 / 286) задана только здесь. Меняешь её —
+   поправь и отступ полоски прогресса в theme.css: полоска начинается
+   там, где кончается рельса, и числа должны совпадать. */
+
+.c-main{flex:1;min-width:0;padding:30px 40px 100px;max-width:1180px;margin:0 auto}
+
+/* Кегль. В книге он мелкий, потому что текст должен был влезть в лист А4.
+   На экране это ограничение снято — увеличиваем вместе с шириной колонки. */
+.lesson{zoom:1.28}
+@media(min-width:1400px){ .c-main{max-width:1320px} .lesson{zoom:1.38} }
+@media(min-width:1700px){ .c-main{max-width:1440px} .lesson{zoom:1.46} }
+
+/* Междустрочный интервал. В книге 1.32 — плотно, ради экономии страниц.
+   Для чтения с экрана нужен воздух, иначе строки сливаются. */
+.lesson p, .lesson li, .lesson dd, .lesson dt,
+.lesson .lede, .lesson td, .lesson .callout > div{ line-height:1.62!important; }
+.lesson p{ margin-bottom:.9em }
+.lesson li{ margin-bottom:.4em }
+.lesson .code pre{ line-height:1.5!important }
+
+/* ---------- оглавление внутри урока ----------
+   Строка названий разделов под шапкой проекта. Не липкая и без рамок:
+   это подпись к странице, а не вторая панель навигации — слева уже есть
+   список уроков, и две панели сразу сделали бы страницу тяжёлой.
+   Строится сборщиком из настоящих подзаголовков книги. */
+.l-toc{display:flex;flex-wrap:wrap;align-items:center;gap:7px 15px;
+  margin:0 0 4mm;padding:3mm 0;border-top:1px solid var(--rule);
+  border-bottom:1px solid var(--rule)}
+.l-toc a{font-family:var(--sans)!important;font-size:9.2pt;line-height:1.3;
+  color:var(--ink-3)!important;text-decoration:none!important;border-bottom:0!important}
+.l-toc a:hover{color:var(--ink)!important}
+/* Разбор поломок этого проекта — единственное здесь, что выделено: к нему
+   тянутся, когда уже не получается, и искать его глазами в этот момент
+   особенно обидно. Последний пункт — общие беды, отдельной страницей. */
+.l-toc .l-trouble{font-weight:600;color:var(--ink-2)!important}
+.l-toc .l-trouble:hover{color:var(--signal)!important}
+/* Общие беды отделены от разделов урока чертой, а не точкой: точка,
+   уехав на вторую строку, читалась как мусор. */
+.l-toc .l-help{color:var(--ink-4)!important;border-left:1px solid var(--rule-strong);
+  padding-left:15px}
+/* Заголовок не должен уезжать под шапку, когда на него прыгают по ссылке. */
+.lesson .h-sub{scroll-margin-top:110px}
+@media(max-width:1140px){
+  .l-toc{gap:6px 14px}
+  .l-toc .l-trouble{margin-left:0}
+}
+
+/* ---------- низ урока ---------- */
+.c-foot{margin-top:34px;padding-top:24px;border-top:1px solid var(--rule);
+  display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.c-mark{display:flex;align-items:center;gap:10px;padding:12px 22px;border-radius:10px;
+  border:1px solid var(--rule-strong);background:var(--paper-2);color:var(--ink-2);
+  font-family:var(--sans);font-size:15px;font-weight:500;cursor:pointer;transition:.12s}
+.c-mark .box{width:18px;height:18px;border:1px solid var(--rule-strong);border-radius:5px;
+  background:transparent;display:grid;place-items:center;font-size:12px;line-height:1}
+.c-mark:hover{border-color:var(--green);color:var(--ink)}
+.c-mark.on{border-color:var(--green);background:var(--green);color:#04170F;font-weight:600}
+.c-mark.on .box{background:#04170F;border-color:#04170F;color:var(--green);font-weight:700}
+.c-hint{font-size:12px;color:var(--ink-3)}
+
+/* ПОРОГ 1140, а не 900. В полосе 901-1140 рельса не оставляла уроку места:
+   страница уезжала вбок. Теперь в этом диапазоне меню уходит за край и
+   вызывается кнопкой, как в документации Stripe и MDN. */
+@media(max-width:1140px){
+  .c-burger{display:inline-block}
+  .c-rail{position:fixed;left:0;top:var(--top-h);z-index:55;transform:translateX(-100%);transition:transform .2s;
+    box-shadow:6px 0 24px rgba(26,24,20,.18)}
+  .c-rail.open{transform:translateX(0)}
+  .c-main{padding:18px 16px 80px}
+  .lesson{zoom:1}
+}
+@media print{.c-top,.c-rail,.c-foot,.c-help{display:none!important}}
+</style>
+</head>
+<body class="course">
+
+<a class="skiplink" href="#main">Перейти к уроку</a>
+
+<!-- Полоска прогресса чтения урока. Три пикселя по верху окна: один урок —
+     это около 15 экранов, и без неё непонятно, ты в начале или почти
+     закончил. Стили — в theme.css, поведение — в скрипте внизу. -->
+<div class="c-prog" aria-hidden="true"><i></i></div>
+
+<div class="c-top"><div class="c-top-in">
+  <button class="c-btn c-burger" id="burger" aria-label="Список уроков">☰</button>
+  <a class="c-brand" href="index.html" aria-label="Arduino Learning — на главную">
+    <svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true">
+      <g fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round">
+        <rect x="26" y="34" width="48" height="34" rx="5"/>
+        <line x1="36" y1="34" x2="36" y2="23"/><line x1="50" y1="34" x2="50" y2="23"/><line x1="64" y1="34" x2="64" y2="23"/>
+        <line x1="36" y1="68" x2="36" y2="79"/><line x1="50" y1="68" x2="50" y2="79"/><line x1="64" y1="68" x2="64" y2="79"/>
+      </g>
+    </svg>
+    <span class="brand-txt"><b>Arduino</b><span class="brand-rest"> Learning</span></span>
+  </a>
+  <div class="c-sp"></div>
+  <a class="c-btn" id="backlink" href="index.html">←&nbsp;<span class="bl-full">Все проекты</span><span class="bl-short">Проекты</span></a>
+</div></div>
+
+<div class="c-shell">
+  <nav class="c-rail" id="rail">
+    <a class="c-rail-brand" href="index.html" aria-label="На главную">
+      <svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round">
+          <rect x="26" y="34" width="48" height="34" rx="5"/>
+          <line x1="36" y1="34" x2="36" y2="23"/><line x1="50" y1="34" x2="50" y2="23"/><line x1="64" y1="34" x2="64" y2="23"/>
+          <line x1="36" y1="68" x2="36" y2="79"/><line x1="50" y1="68" x2="50" y2="79"/><line x1="64" y1="68" x2="64" y2="79"/>
+        </g>
+      </svg>
+      <span class="brand-txt"><b>Arduino</b> Learning</span>
+    </a>
+    <!--RAIL-->
+  </nav>
+  <main class="c-main" id="main" tabindex="-1">
+    <!--LESSONS-->
+  </main>
+</div>
+
+<script>
+/* =====================================================================
+   ШАПКА УЕЗЖАЕТ ПРИ ПРОКРУТКЕ + ПОЛОСКА ПРОГРЕССА ЧТЕНИЯ
+
+   Зачем: страница урока — это 15 экранов прокрутки, а тёмная шапка
+   занимает сверху 84 пикселя постоянно, то есть примерно три строки
+   текста на каждом экране.
+
+   Как: прячем при движении ВНИЗ, мгновенно возвращаем при движении
+   ВВЕРХ. Так сделано у Medium, Substack, в мобильных Chrome и Safari.
+
+   Порог 140 пикселей: до него шапка всегда на месте, иначе она дёргалась
+   бы от случайного касания колеса у самого верха. Порог 5 пикселей на
+   смену направления — от дрожания тачпада.
+
+   На узких экранах (до 1140) шапка НЕ уезжает: там в ней живёт кнопка
+   вызова меню, и без шапки до списка уроков не добраться. Порог совпадает
+   с тем, на котором рельса уходит за край — менять их надо парой.
+   ===================================================================== */
+(function(){
+  var body = document.body;
+  var fill = document.querySelector('.c-prog > i');
+  var last = 0;
+  var GUARD = 140;   /* до этой прокрутки шапка не прячется */
+  var JITTER = 5;    /* меньше этого — считаем дрожанием, не движением */
+
+  function onScroll(){
+    var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+
+    if (window.innerWidth <= 1140 || y < GUARD){
+      body.classList.remove('hdr-away');
+    } else if (y > last + JITTER){
+      body.classList.add('hdr-away');
+    } else if (y < last - JITTER){
+      body.classList.remove('hdr-away');
+    }
+    last = y;
+
+    if (fill){
+      var room = (document.documentElement.scrollHeight || 0) - window.innerHeight;
+      fill.style.transform = 'scaleX(' + (room > 0 ? Math.min(1, y / room) : 0) + ')';
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll);
+  onScroll();
+
+  /* Переключили урок — прокрутка ушла в начало, шапку возвращаем сразу. */
+  document.addEventListener('click', function(e){
+    if (e.target.closest && e.target.closest('.c-rail a, .c-btn')){
+      setTimeout(function(){ last = 0; onScroll(); }, 60);
+    }
+  }, true);
+})();
+</script>
+
+<script src="kit.js"></script>
+<script src="image-slot.js"></script>
+<script src="icons.js"></script>
+<script src="app.js"></script>
+<!--INLINE-SCRIPTS-->
+<script>
+/* =====================================================================
+   Уроки: переключение, отметка «собрал», галочки в программе курса.
+   Отметки те же, что на главной — то же хранилище в браузере.
+   ===================================================================== */
+(function(){
+ try {
+  Progress.load();
+
+  var rail  = document.getElementById('rail');
+  var items = [].slice.call(rail.querySelectorAll('.c-item'));
+  var keys  = items.map(function(a){ return a.dataset.k; });
+
+  /* --- отрисовка ----------------------------------------------------- */
+  function paintRail(){
+    items.forEach(function(a){
+      var m = /^proj-(\d+)$/.exec(a.dataset.k);
+      var ok = a.querySelector('.c-ok');
+      ok.textContent = (m && Progress.isDone(+m[1])) ? '✓' : '';
+    });
+  }
+
+  function paintFoot(art){
+    var foot = art.querySelector('.c-foot');
+    if (!foot) return;
+    foot.innerHTML = '';
+    var n = foot.dataset.proj ? +foot.dataset.proj : null;
+
+    if (n){
+      /* Порядок свободный: отметить можно любой проект, а не только
+         следующий по очереди. */
+      var done = Progress.isDone(n);
+      var b = document.createElement('button');
+      b.className = 'c-mark' + (done ? ' on' : '');
+      b.innerHTML = '<span class="box">' + (done ? '✓' : '') + '</span>' +
+                    (done ? 'Собрал' : 'Собрал — отметить');
+      b.onclick = function(){
+        Progress.set(n, !done);
+        paintRail(); paintFoot(art);
+        if (!done){
+          var i = keys.indexOf('proj-' + n);
+          if (i > -1 && i + 1 < keys.length) show(keys[i + 1]);
+        }
+      };
+      foot.appendChild(b);
+
+      /* «Не получается» — прямо в уроке, там где человек упирается. */
+      var sb = document.createElement('button');
+      sb.className = 'c-btn';
+      sb.textContent = 'Не получается';
+      sb.onclick = function(){ askHelp(n); };
+      foot.appendChild(sb);
+
+      /* Правило «отмечай, когда заработало вживую» важно узнать один раз.
+         Дальше подсказка только шумела бы на каждом из семнадцати уроков. */
+      if (!done && Progress.doneCount() === 0){
+        var hint = document.createElement('span');
+        hint.className = 'c-hint';
+        hint.textContent = 'Отмечай, когда заработает вживую';
+        foot.appendChild(hint);
+      }
+    }
+
+    var i2 = keys.indexOf(art.id.replace('L-',''));
+    if (i2 > 0){
+      var pv = document.createElement('button');
+      pv.className = 'c-btn';
+      pv.textContent = '← Назад';
+      pv.onclick = function(){ show(keys[i2-1]); };
+      foot.appendChild(pv);
+    }
+    if (i2 > -1 && i2 + 1 < keys.length){
+      var nx = document.createElement('button');
+      nx.className = 'c-btn';
+      nx.textContent = 'Дальше →';
+      nx.onclick = function(){ show(keys[i2+1]); };
+      foot.appendChild(nx);
+    }
+  }
+
+  function show(key){
+    if (keys.indexOf(key) < 0){
+      /* Ссылка внутри текста ведёт куда-то в середину урока — находим её урок. */
+      var el = key ? document.getElementById(key) : null;
+      var host = el && el.closest ? el.closest('.lesson') : null;
+      if (host){
+        var k2 = host.id.replace('L-','');
+        show(k2);
+        setTimeout(function(){ el.scrollIntoView({block:'start'}); }, 30);
+        return;
+      }
+      key = keys[0];
+    }
+    document.querySelectorAll('.lesson').forEach(function(a){ a.hidden = (a.id !== 'L-' + key); });
+    items.forEach(function(a){ a.classList.toggle('on', a.dataset.k === key); });
+    var art = document.getElementById('L-' + key);
+    if (art) paintFoot(art);
+    if (location.hash.slice(1) !== key) history.replaceState(null, '', '#' + key);
+    window.scrollTo(0,0);
+    rail.classList.remove('open');
+    var on = rail.querySelector('.c-item.on');
+    if (on && on.scrollIntoView) on.scrollIntoView({block:'nearest'});
+  }
+
+  items.forEach(function(a){
+    a.addEventListener('click', function(e){ e.preventDefault(); show(a.dataset.k); });
+  });
+
+  /* Прыжок по строке разделов урока. Делаем его сами, а не через адресную
+     строку: иначе заголовок уезжает под шапку, а на телефоне ещё и под
+     прилипшую строку разделов — и человек видит середину чужого абзаца
+     вместо названия раздела, в который он целился. */
+  document.addEventListener('click', function(e){
+    var a = e.target.closest ? e.target.closest('.l-toc a[href^="#"]') : null;
+    if (!a) return;
+    var el = document.getElementById(a.getAttribute('href').slice(1));
+    if (!el) return;
+    e.preventDefault();
+    var toc = a.closest('.l-toc');
+    var sticky = window.innerWidth <= 1140 ? toc.getBoundingClientRect().height : 0;
+    var head = parseInt(getComputedStyle(document.documentElement)
+                 .getPropertyValue('--top-h'), 10) || 78;
+    var y = el.getBoundingClientRect().top + window.pageYOffset - head - sticky - 12;
+    window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+  });
+  document.getElementById('burger').onclick = function(){ rail.classList.toggle('open'); };
+  window.addEventListener('hashchange', function(){ show(location.hash.slice(1)); });
+
+  paintRail();
+  show(location.hash.slice(1) || keys[0]);
+
+  /* Отметку могли поставить в другой вкладке — на главной. */
+  window.addEventListener('storage', function(e){
+    if (!e.key || e.key === Progress.KEY){
+      Progress.load(); paintRail();
+      var open = document.querySelector('.lesson:not([hidden])');
+      if (open) paintFoot(open);
+    }
+  });
+
+ } catch(err){
+  /* Страховка: что бы ни случилось, текст должен остаться читаемым —
+     показываем все уроки подряд, одной длинной страницей. */
+  document.querySelectorAll('.lesson').forEach(function(a){ a.hidden = false; });
+  console.error('course:', err);
+ }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<title>Если совсем не идёт — Arduino Learning</title>
+<meta name="robots" content="noindex, nofollow">
+<!-- Авторские права © 2025 Maxmarker. Все права защищены. Коммерческое использование запрещено без письменного разрешения. -->
+<link rel="icon" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* Каркас — как на главной. Всё остальное в theme.css и site.css. */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:#F6F8FC;color:#16233D;font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{margin:0;font-weight:600}
+p{margin:0 0 .6em}
+a{color:#1D4ED8}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 80px}
+.topbar{position:sticky;top:0;z-index:50;background:#040057}
+.topbar-in{max-width:1180px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{font-size:26px;line-height:1}
+.spacer{flex:1}
+.btn{border:1.5px solid #CBD6E6;background:#fff;color:#16233D;padding:8px 16px;border-radius:8px;font-weight:500}
+.btn.sm{padding:5px 11px;font-size:13.5px}
+.section-head{display:flex;align-items:baseline;gap:14px;margin:40px 0 14px}
+.section-head h2{font-size:31px;line-height:1}
+.section-head .sub{font-size:13.5px;color:#74839E}
+a.btn{text-decoration:none;display:inline-block;text-align:center}
+</style>
+<link rel="stylesheet" href="theme.css?v=1789545694">
+<link rel="stylesheet" href="site.css?v=1789545694">
+</head>
+<body>
+
+<a class="skiplink" href="#main">Перейти к содержимому</a>
+
+<div class="topbar"><div class="topbar-in">
+  <a class="brand" href="index.html" aria-label="Arduino Learning — на главную">
+    <svg class="brand-mark" viewBox="0 0 100 100" aria-hidden="true">
+      <g fill="none" stroke="currentColor" stroke-width="5.5" stroke-linecap="round">
+        <rect x="26" y="34" width="48" height="34" rx="5"/>
+        <line x1="36" y1="34" x2="36" y2="23"/><line x1="50" y1="34" x2="50" y2="23"/><line x1="64" y1="34" x2="64" y2="23"/>
+        <line x1="36" y1="68" x2="36" y2="79"/><line x1="50" y1="68" x2="50" y2="79"/><line x1="64" y1="68" x2="64" y2="79"/>
+      </g>
+    </svg>
+    <span class="brand-txt"><b>Arduino</b><span class="brand-rest"> Learning</span></span>
+  </a>
+  <div class="spacer"></div>
+  <a class="btn ghost sm" href="index.html">← Все проекты</a>
+</div></div>
+
+<div class="wrap" id="main">
+
+  <div class="help-top">
+    <h1>Если совсем не идёт</h1>
+    <p>Здесь собрано то, что ломается не в каком-то одном проекте, а вообще: плата не
+    определяется, код не заливается, собрал по схеме — и тишина. Разбор поломок
+    конкретного проекта — внутри самого урока, в разделе «Если не работает».</p>
+  </div>
+
+  <div class="section-head"><h2>Плата и компьютер</h2>
+    <span class="sub">Всё, что происходит до того, как код попал на плату</span></div>
+
+  <div class="qa">
+
+    <div class="qa-item">
+      <h3>В Arduino IDE нет COM-порта. Меню «Инструменты» → «Порт» пустое</h3>
+      <p>Плата разговаривает с компьютером не напрямую: между её процессором и USB-разъёмом
+      стоит отдельная микросхема-переводчик, и драйвер нужен именно ей. У разных партий
+      плат она разная — поэтому сначала посмотри, что стоит у тебя, и только потом ставь
+      драйвер.</p>
+      <p>Не отключая плату, нажми <b>Win+X</b> → <b>Диспетчер устройств</b> и разверни
+      раздел <b>«Порты (COM и LPT)»</b>. Название строки прямо скажет, что у тебя:</p>
+      <table class="qa-tbl">
+        <tr><th>Что написано</th><th>Чип</th><th>Что ставить</th></tr>
+        <tr><td>USB Serial Port</td><td>FTDI FT232R</td><td>Драйвер VCP с ftdichip.com/drivers/vcp-drivers</td></tr>
+        <tr><td>USB-SERIAL CH340</td><td>CH340</td><td>CH341SER.EXE с wch-ic.com</td></tr>
+        <tr><td>Arduino Uno</td><td>ATmega16U2</td><td>Ничего, драйвер ставится вместе с IDE</td></tr>
+        <tr><td>Строки нет вообще</td><td>—</td><td>Дело не в драйвере: смени кабель и USB-порт</td></tr>
+      </table>
+      <p class="qa-more">Подробнее — в разделе <a href="course.html#part-2">«Быстрый старт»</a>, пункт 2.2.</p>
+    </div>
+
+    <div class="qa-item">
+      <h3>Компьютер вообще не реагирует на подключение платы</h3>
+      <p>Чаще всего дело в кабеле. Кабели от зарядок бывают «только для питания», без линии
+      данных: плата от такого загорается, но компьютер её не видит. Возьми другой кабель —
+      тот, которым подключают принтер или которым шла плата, — и воткни его до конца
+      в оба разъёма. Заодно попробуй другой USB-порт на ноутбуке.</p>
+    </div>
+
+    <div class="qa-item">
+      <h3>Плата «залипла»: звук подключения и отключения USB повторяется по кругу</h3>
+      <p>Это не поломка. Отключи USB-кабель, подожди секунд десять и подключи заново,
+      потом проверь в «Инструменты» → «Порт», что порт определился и держится
+      стабильно. Только после этого заливай код.</p>
+    </div>
+
+  </div>
+
+  <div class="section-head"><h2>Код не заливается</h2>
+    <span class="sub">Ошибки, которые IDE пишет чёрным по оранжевому внизу окна</span></div>
+
+  <div class="qa">
+
+    <div class="qa-item">
+      <h3>«programmer is not responding» или «avrdude: stk500_getsync()»</h3>
+      <p>Плата не отвечает в тот момент, когда IDE пытается с ней говорить. По порядку:
+      закрой Serial Monitor, если он открыт (он держит порт занятым); проверь
+      «Инструменты» → «Порт» — там должен быть выбран порт твоей платы; переподключи
+      USB-кабель и выбери порт заново.</p>
+    </div>
+
+    <div class="qa-item">
+      <h3>Код заливается, но на плате ведёт себя по-старому</h3>
+      <p>Скорее всего нажата <b>галочка</b>, а не <b>стрелка</b>. Галочка (Verify) только
+      проверяет код на ошибки и на плату ничего не отправляет — там остаётся предыдущая
+      программа. Заливает <b>стрелка вправо</b> (Upload), она вторая слева.</p>
+      <p>И ещё: код в редактор нужно вставлять целиком. Ctrl+A → Delete → Ctrl+V → стрелка.
+      Если вставить новый код поверх старого, не удалив его, получится каша из двух программ
+      и ошибка компиляции.</p>
+    </div>
+
+    <div class="qa-item">
+      <h3>Ошибка компиляции сразу, до всякой заливки</h3>
+      <p>Три обычные причины. Первая: не выбрана плата — «Инструменты» → «Плата» →
+      Arduino UNO. Вторая: проект сохранён в папку, в пути которой есть русские буквы —
+      перенеси его в папку с латинским именем. Третья: не хватает библиотеки, тогда
+      в ошибке будет строка вида <code>No such file or directory</code> и имя файла —
+      как ставить библиотеки, написано в <a href="course.html#part-3">«Основах»</a>,
+      пункт 3.6.</p>
+    </div>
+
+  </div>
+
+  <div class="section-head"><h2>Собрал, а не работает</h2>
+    <span class="sub">Код на плате, светодиод молчит</span></div>
+
+  <div class="qa">
+
+    <div class="qa-item">
+      <h3>Проверь это до того, как искать поломку дальше</h3>
+      <ol class="qa-list">
+        <li><b>Все минусы сходятся на GND платы.</b> Это самая частая причина: схема
+        собрана правильно, но обратного пути у тока нет, и не работает ничего.
+        На длинных макетках нижняя и верхняя шины часто разорваны посередине —
+        поэтому минусы надёжнее вести прямо в пин GND на плате, а не через шину.</li>
+        <li><b>Светодиод воткнут правильной стороной.</b> Длинная ножка — плюс,
+        короткая — минус. Наоборот он просто не горит и при этом не ломается.</li>
+        <li><b>Ножки деталей сидят в разных столбцах макетки.</b> Если обе ножки
+        попали в один столбец, деталь закорочена сама на себя.</li>
+        <li><b>Провода нужного типа.</b> В плату и в макетку идут «папа» (штырьки),
+        а на торчащие штырьки модуля надевается «мама» (гнездо). В таблице
+        подключения у каждого проекта тип провода указан.</li>
+        <li><b>Плата запитана.</b> На ней должен гореть светодиод ON.</li>
+      </ol>
+    </div>
+
+    <div class="qa-item">
+      <h3>Экран LCD светится, но текста нет</h3>
+      <p>Контраст. Крути маленький винтик на потенциометре, пока из пустоты не проступят
+      буквы — у этого экрана есть положение ручки, при котором текст не виден вообще,
+      хотя всё собрано верно. Если вместо букв ряды сплошных чёрных прямоугольников —
+      это тоже контраст, крути в другую сторону.</p>
+    </div>
+
+    <div class="qa-item">
+      <h3>Зуммер пищит одним тоном вместо мелодии</h3>
+      <p>В наборе два зуммера, и они разные. Мелодию играет <b>пассивный</b>: корпус
+      сверху не залит, внутри видно плату, обе ножки одинаковой длины, на корпусе
+      есть значки «+» и «−». У активного корпус залит эпоксидкой и одна ножка заметно
+      длиннее — он умеет только пищать на одной ноте.</p>
+    </div>
+
+  </div>
+
+  <div class="section-head"><h2>Частые вопросы</h2>
+    <span class="sub">Не поломки, а «а можно ли»</span></div>
+
+  <div class="qa">
+    <div class="qa-item">
+      <h3>Можно оставить проект собранным?</h3>
+      <p>Да, он будет работать, пока подключено питание. Но для следующего проекта
+      те же детали придётся разобрать — в наборе по одному экрану и по одному мотору.</p>
+    </div>
+    <div class="qa-item">
+      <h3>Как запитать плату без компьютера?</h3>
+      <p>Батарейкой 9V через DC-разъём — он есть в наборе, — или обычным зарядником
+      с USB-выходом. Код на плате остаётся, он никуда не пропадает после отключения.</p>
+    </div>
+    <div class="qa-item">
+      <h3>Сколько проектов можно собрать одновременно?</h3>
+      <p>Простые, где только светодиоды и кнопка, — два-три сразу. Сложные с экраном
+      или клавиатурой занимают почти все пины платы, так что по одному.</p>
+    </div>
+  </div>
+
+  <div class="help-ask">
+    <div class="help-ask-txt">
+      <h3>Не нашлось здесь</h3>
+      <p>Напиши в Telegram-группу набора и <b>приложи фото сборки</b>.</p>
+      <p><a class="btn primary" id="tg" href="#" target="_blank" rel="noopener">Открыть Telegram-группу</a></p>
+    </div>
+    <a class="help-qr" id="tgqr" href="#" target="_blank" rel="noopener">
+      <img src="assets/qr-telegram.png" alt="QR-код Telegram-группы набора" width="740" height="740" loading="lazy">
+      <span>Наведи камеру телефона</span>
+    </a>
+  </div>
+
+  <div class="foot-note">
+    <p class="cr">Arduino Learning · инструкция v1.0 · © 2025 Maxmarker ·
+    <a href="index.html">все проекты</a></p>
+  </div>
+
+</div>
+
+<script src="kit.js?v=1789545694"></script>
+<script>
+  document.getElementById('tg').href = KIT.TELEGRAM;
+  document.getElementById('tgqr').href = KIT.TELEGRAM;
+</script>
+</body>
+</html>

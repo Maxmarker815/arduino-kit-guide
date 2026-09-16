@@ -1,0 +1,1728 @@
+/* =====================================================================
+   KUPUEV ACADEMY — светлая тема с тёмно-синими панелями
+   Текст читается на светлом, шапка и программа курса — глубокий navy.
+   Один файл на платформу и на уроки. Печатная книга (guide/index.html)
+   этот файл НЕ подключает и остаётся бумажной.
+   ===================================================================== */
+
+:root{
+  /* светлая часть — там, где читают */
+  --paper:        #F6F8FC;   /* фон страницы            */
+  --paper-2:      #FFFFFF;   /* карточки, панели        */
+  --paper-3:      #EDF2F9;   /* наведение, заливка      */
+  --ink:          #16233D;   /* основной текст — тёмно-синий, не чёрный */
+  --ink-2:        #44567A;
+  --ink-3:        #74839E;
+  --ink-4:        #9AA7BE;
+  --rule:         #E3E9F3;
+  --rule-strong:  #CBD6E6;
+
+  /* тёмно-синий — панели вокруг */
+  --navy:         #040057;
+  --navy-2:       #0D0D6B;
+  --navy-3:       #1A1A80;
+  --navy-line:    #2B2B92;
+
+  /* смысловые цвета */
+  --accent:       #2563EB;
+  --accent-soft:  #1D4ED8;
+  --signal:       #DC4B32;
+  --signal-dark:  #B93A24;
+  --signal-tint:  #FDEEEA;
+  --teal:         #2563EB;
+  --teal-dark:    #1D4ED8;
+  --teal-tint:    #E9F0FE;
+  --highlight:    #FFF6E0;
+  --warn:         #C4890F;
+  --green:        #17A46B;
+  --green-dark:   #0F8555;
+  --green-tint:   #E6F7EF;
+  --green-pale:   #E6F7EF;   /* подложка собранной карточки. Подбиралась
+                                 сравнением трёх ступеней в реальном ряду:
+                                 #F1FAF5 на фоне белых карточек не читался
+                                 вообще, #EBF7F1 читался, Максат выбрал ещё
+                                 на ступень сочнее — это значение.
+                                 Меняешь силу подсветки — меняй только его. */
+
+  --sans:  'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Заголовки тоже Inter: антиква читалась «книжно», а платформа — не книга.
+     Вернуть прежний вид: 'Instrument Serif', Georgia, serif */
+  --serif: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono:  'JetBrains Mono', ui-monospace, monospace;
+
+  --r-sm: 8px; --r-md: 12px; --r-lg: 16px;
+  --shadow-sm: 0 1px 2px rgba(22,35,61,.06), 0 1px 3px rgba(22,35,61,.05);
+  --shadow:    0 2px 6px rgba(22,35,61,.06), 0 12px 32px rgba(22,35,61,.08);
+}
+
+/* Заголовки: Inter требует веса и плотной посадки, иначе выглядит вяло */
+h1, h2, h3, h4, .c-lhead h1, .hero .big, .section-head h2, .modal h3, .login h1{
+  font-weight:600 !important; letter-spacing:-.015em !important; }
+.hero .big{ font-weight:700 !important; letter-spacing:-.03em !important; }
+
+/* Мелкие подписи были моноширинными заглавными — отсюда ощущение
+   «сплошных больших букв». Тот же Inter, разрядка меньше, размер чуть больше. */
+.stat .l, .section-head .sub, .c-lnum, .who, .field label, table.list th{
+  font-family:var(--sans) !important; text-transform:none !important;
+  letter-spacing:0 !important; font-weight:600 !important; }
+.stat .l{ font-size:17px !important; color:var(--ink-3) !important; margin-bottom:10px !important; }
+.field label{ font-size:13.5px !important; }
+table.list th{ font-size:13.5px !important; }
+.who{ font-size:13.5px !important; }
+.section-head .sub{ font-size:13.5px !important; }
+/* Подпись под названием школы убрана: её видит только тот, кто уже вошёл,
+   и она повторяется на каждом экране, ничего не сообщая. Вернуть — снять display:none. */
+.brand small, .c-brand small{ display:none !important; }
+/* Роль и имя справа в шапке — крупнее, чтобы уравновесить название слева */
+.topbar .who{ font-size:13.5px !important; font-weight:500 !important; }
+.topbar .who b{ font-size:17px !important; font-weight:600 !important; margin-top:2px; }
+
+html, body{ background:var(--paper); color:var(--ink); }
+body{ -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+      /* Различимые «I», «l» и единица — в инструкции постоянно встречаются
+         обозначения вроде I2C, A0, D8, LM35, и их нельзя путать. */
+      font-feature-settings:'cv05' 1,'cv08' 1,'ss02' 1; }
+/* Моноширинные цифры — только там, где числа стоят столбцом и должны
+   выравниваться. На крупных числах они дают рыхлость: каждая цифра
+   получает ширину нуля, и «121» выглядит разъехавшимся. */
+table.list td, table.list th, table.mx td, table.mx th{ font-variant-numeric:tabular-nums; }
+::selection{ background:rgba(37,99,235,.16); }
+
+*{ scrollbar-color:#C2CEE0 transparent; scrollbar-width:thin; }
+::-webkit-scrollbar{ width:10px; height:10px; }
+::-webkit-scrollbar-thumb{ background:#C6D2E2; border-radius:20px; border:2px solid var(--paper); }
+::-webkit-scrollbar-thumb:hover{ background:#A9B9CE; }
+::-webkit-scrollbar-track{ background:transparent; }
+
+/* =====================================================================
+   ТЁМНО-СИНИЕ ПАНЕЛИ
+   Внутри них переменные переопределены, поэтому весь текст и границы
+   внутри автоматически становятся «светлыми на тёмном».
+   ===================================================================== */
+.c-top, .c-rail, .topbar{
+  --paper:      #040057;
+  --paper-2:    #0D0D6B;
+  --paper-3:    #1A1A80;
+  --ink:        #F4F7FC;
+  --ink-2:      #C3D0E4;
+  --ink-3:      #93A3BE;
+  --ink-4:      #74849F;
+  --rule:       #26268C;
+  --rule-strong:#3A3AA3;
+  --accent:     #7FB6FF;
+  --teal-dark:  #9CC5FF;
+}
+/* Панели задают ещё и цвет текста — иначе он наследуется тёмным и пропадает. */
+.c-top, .c-rail, .topbar{ color:#F4F7FC !important; }
+.c-top *, .c-rail *, .topbar *{ border-color:rgba(255,255,255,.16); }
+/* Название школы — антиквой: это логотип, а не заголовок интерфейса */
+.c-brand, .topbar .brand{ font-family:'Instrument Serif', Georgia, serif !important;
+  font-weight:400 !important; letter-spacing:.03em !important; }
+.c-brand, .c-brand *, .topbar .brand, .topbar .brand *{ color:#FFFFFF !important; }
+/* название школы — крупнее, это фирменный блок */
+.topbar .brand{ font-size:31px !important; }
+/* Шапка выровнена с содержимым страницы: у .wrap отступ 20px, значит и здесь 20,
+   иначе название школы стоит на 10 пикселей правее слова «Группа» под ним. */
+.topbar-in{ padding:0 32px !important; min-height:78px !important; max-width:none !important; }
+
+/* Рабочая область шире — на широком мониторе не оставалось половины экрана
+   пустой. Карточки проектов крупнее, а не просто расставлены гуще. */
+.wrap{ max-width:1560px !important; }
+.proj-grid{ grid-template-columns:repeat(auto-fill,minmax(330px,1fr)) !important; gap:16px !important; }
+.pcard{ padding:20px 20px 18px !important; gap:11px !important; }
+.pcard h3{ font-size:22px !important; }
+.pcard .num{ font-size:12px !important; }
+.mark{ padding:11px 14px !important; font-size:15px !important; }
+.pcard .acts .btn{ font-size:13.5px !important; padding:7px 13px !important; }
+.hero{ padding:30px 32px !important; }
+.hero .big{ font-size:64px !important; }
+@media(min-width:1400px){ .topbar-in{ min-height:84px !important; } }
+@media(min-width:1400px){ .topbar .brand{ font-size:37px !important; } }
+.topbar .who{ color:#A6ADDE !important; }
+.topbar .who b{ color:#FFFFFF !important; }
+
+.c-top{  background:var(--navy) !important; border-bottom:1px solid rgba(255,255,255,.10) !important;
+         backdrop-filter:none !important; }
+.c-rail{ background:var(--navy) !important; border-right:1px solid rgba(255,255,255,.09) !important; }
+
+/* ==================== ШАПКА УЕЗЖАЕТ ПРИ ПРОКРУТКЕ ====================
+
+   Класс `hdr-away` вешает на body скрипт из шаблона-курса (там же
+   написано, когда и почему). Здесь — только вид.
+
+   Почему шапку не сдвигаем целиком вверх, а ГАСИМ подложку. `.c-top`
+   у нас `position:sticky`, то есть место в потоке она занимает у самого
+   начала документа. Пока человек прокрутил вниз, это место давно ушло
+   за край экрана, а сама полоса приколота к верху и текст едет ПОД ней.
+   Значит достаточно убрать у полосы фон и рамку — и в этих 84 пикселях
+   сразу становится виден текст урока. Никакого пересчёта раскладки,
+   никакого прыжка содержимого. Если вместо этого сдвигать полосу
+   трансформацией, результат тот же, но добавляется лишняя анимация.
+
+   Что остаётся видимым:
+   - логотип в уменьшенном виде. Он оказывается над тёмной рельсой,
+     поэтому собственная подложка ему не нужна — но для этого рельса
+     должна дотянуться до самого верха окна, отсюда `--rail-top` ниже.
+     Без неё за прозрачной полосой слева был бы светлый фон страницы,
+     и белый знак на нём пропал бы;
+   - «Мои проекты» — отдельной белой плашкой с тенью. В шапке эта кнопка
+     полупрозрачно-белая на синем; над светлым текстом она бы исчезла,
+     поэтому здесь ей выдаётся нормальный светлый вид кнопки.
+
+   `pointer-events:none` на полосе, чтобы её невидимая часть не
+   перехватывала нажатия по тексту урока; кнопке события возвращаются.
+
+   ВАЖНО: до 820px этот класс не ставится вовсе (проверка в скрипте) —
+   на узком экране в шапке живёт кнопка вызова меню, и без шапки до
+   списка уроков не добраться. */
+
+/* ==================== ЗАЗОР МЕЖДУ РЕЛЬСОЙ И ТЕКСТОМ ====================
+
+   Жалоба: «столбец слипся с меню слева, слова на синем мешают читать».
+   Верная, и вот что показал замер. Колонка урока центрируется в остатке
+   места (`.c-main{margin:0 auto}` в шаблоне), поэтому зазор до рельсы
+   получался не постоянным, а «сколько осталось»:
+
+       окно 1920 -> 137px      окно 1754 -> 54px
+       окно 1440 ->  40px      окно 1200 -> 40px
+
+   То есть на широком экране воздуха вдоволь, а на рабочем ноутбуке
+   Максата (1754 CSS-пикселя) текст почти упирался в тёмную панель.
+   Правкой одного отступа это не лечится: он бы гулял так же.
+
+   Лечится промежутком у самой раскладки — `.c-shell` это флекс-строка
+   из рельсы и колонки урока. Промежуток вычитается ДО центрирования,
+   поэтому зазор становится постоянным: минимум 150 пикселей на любой
+   ширине, и только сверх этого прибавляется то, что осталось.
+
+   Почему зазор вообще должен быть большим. Слева не пустое поле, а
+   тёмная панель с белыми словами. Глаз, дойдя до конца строки, ищет
+   начало следующей — и цепляется за чужой текст, если он рядом.
+   Это та же болезнь, что и слишком длинная строка, только с другой
+   стороны. 96 пикселей — примерно ширина большого пальца на экране,
+   этого хватает, чтобы панель читалась как отдельный предмет.
+
+   Ниже 1140px рельса уходит за край экрана (position:fixed) и выпадает
+   из флекс-раскладки — промежуток там не нужен и обнуляется. */
+.c-shell{ gap:110px !important; }
+/* В полосе 1141-1300 зазор 110 уже не влезает — страница уезжала вбок на
+   17 пикселей. Там он вдвое меньше: воздуха достаточно, а места хватает. */
+@media(max-width:1300px){ .c-shell{ gap:56px !important; } }
+@media(max-width:1140px){ .c-shell{ gap:0 !important; } }
+
+/* рельса тянется до верха окна, когда шапка погасла */
+.c-rail{ top:var(--rail-top, var(--top-h)) !important;
+         height:calc(100vh - var(--rail-top, var(--top-h))) !important; }
+body.hdr-away{ --rail-top:0px; }
+
+.c-top{ transition:background-color .18s ease, border-color .18s ease !important; }
+.c-brand img, .c-top .c-btn{ transition:height .18s ease, background-color .18s ease,
+                                        color .18s ease, box-shadow .18s ease !important; }
+
+body.hdr-away .c-top{ background:transparent !important;
+  border-bottom-color:transparent !important; pointer-events:none !important; }
+
+/* ЛОГОТИП СЖИМАЕТСЯ И ПЕРЕЕЗЖАЕТ В РЕЛЬСУ.
+
+   Первая попытка была проще: оставить знак на месте, в шапке, только
+   мелко. Не годится — рельса в этом состоянии дотянута до верха окна,
+   и знак ложился прямо на первый пункт списка уроков.
+
+   Поэтому в шаблоне есть второй знак ВНУТРИ рельсы (`.c-rail-brand`),
+   приколотый к её верху. Рельса тёмная, значит подложка знаку не нужна,
+   а список уроков уезжает под него при прокрутке — накладки нет.
+   Одновременно виден всегда только один знак: в шапке или в рельсе. */
+.c-rail-brand{ display:none; }
+body.hdr-away .c-brand{ display:none !important; }
+body.hdr-away .c-rail-brand{ display:flex !important; align-items:center !important;
+  position:sticky !important; top:0 !important; z-index:3 !important;
+  background:var(--navy) !important; padding:9px 18px 8px !important;
+  border-bottom:1px solid rgba(255,255,255,.09) !important;
+  border-radius:0 !important; }
+body.hdr-away .c-rail-brand img{ display:block !important; height:25px !important; width:auto !important; }
+body.hdr-away .c-rail-brand:hover{ background:#14147A !important; }
+
+/* «Мои проекты» — плашка в углу, читаемая над светлым текстом */
+body.hdr-away .c-top .c-btn{ pointer-events:auto !important;
+  background:#FFF !important; color:var(--ink) !important;
+  border:1px solid var(--rule-strong) !important;
+  box-shadow:0 2px 10px rgba(22,35,61,.14) !important;
+  font-size:12px !important; padding:7px 12px !important; }
+body.hdr-away .c-top .c-btn:hover{ background:var(--paper-3) !important;
+  color:var(--ink) !important; border-color:var(--rule-strong) !important; }
+
+/* ============ ПОЛОСКА ПРОГРЕССА ЧТЕНИЯ ============
+
+   Три пикселя по самому верху окна. Пустая слева, залитая справа:
+   заполняется по мере прокрутки урока. Отвечает на единственный
+   вопрос — сколько ещё осталось, — и занимает 3 пикселя вместо 84.
+
+   Цвет — тёмно-синий, цвет панелей. Зелёный и красный тут брать нельзя:
+   в этом проекте цвет означает состояние (собрано / застрял), и полоска
+   прогресса чтения не должна выглядеть как отметка о сборке.
+
+   z-index выше шапки (у неё 60), чтобы полоска была видна и когда шапка
+   ещё на месте. В самом верху урока она всё равно пустая, так что на
+   тёмной полосе её просто не видно — и это нормально. */
+.c-prog{ position:fixed; top:0; left:0; right:0; height:3px; z-index:70;
+  background:transparent; pointer-events:none; }
+
+/* Полоска начинается ПОСЛЕ рельсы. Она тёмно-синяя, рельса тоже тёмно-синяя —
+   если пустить полоску во всю ширину окна, её первые проценты идут по рельсе
+   и не видны вообще. Числа повторяют ширину рельсы из шаблона-курса
+   (320 / 340 / 350). Меняешь там ширину рельсы — поправь и здесь. */
+.c-prog{ left:264px; }
+@media(min-width:1400px){ .c-prog{ left:276px; } }
+@media(min-width:1700px){ .c-prog{ left:286px; } }
+/* до 900px рельса уходит за край экрана — полоска снова во всю ширину */
+@media(max-width:900px){ .c-prog{ left:0; } }
+.c-prog > i{ display:block; height:100%; width:100%;
+  background:var(--navy-line); transform:scaleX(0); transform-origin:left center;
+  transition:transform .08s linear; }
+@media print{ .c-prog{ display:none !important; } }
+.topbar{ background:var(--navy) !important; border-bottom:1px solid rgba(255,255,255,.10) !important; }
+.c-item{ color:#CBD1F0 !important; }
+.c-item:hover{ background:#14147A !important; color:#FFF !important; }
+.c-item.on{ background:#1D1D8A !important; color:#FFF !important; border-left-color:#8FA8FF !important; }
+.c-item.on .c-n{ color:#A9BCFF !important; }
+.c-ok{ color:#5FD6A4 !important; }
+.c-rail-h{ color:#9098D0 !important; }
+/* Светлая кнопка — та, что на белом фоне: внизу урока «Не получается»,
+   «Назад», «Дальше». Раньше правило ниже действовало на все кнопки сразу,
+   и на светлом они были белым по белому. */
+.c-btn{ background:#FFFFFF !important; border:1px solid var(--rule-strong) !important;
+        color:var(--ink) !important; box-shadow:var(--shadow-sm); }
+.c-btn:hover{ background:var(--navy) !important; border-color:var(--navy) !important;
+        color:#FFFFFF !important; }
+/* В синей шапке — наоборот, прозрачная со светлым текстом */
+.c-top .c-btn{ background:rgba(255,255,255,.08) !important;
+        border:1px solid rgba(255,255,255,.18) !important;
+        color:#F4F7FC !important; box-shadow:none; }
+.c-top .c-btn:hover{ background:rgba(255,255,255,.16) !important;
+        border-color:rgba(255,255,255,.34) !important; color:#FFFFFF !important; }
+.topbar .btn{ background:rgba(255,255,255,.08) !important; border:1px solid rgba(255,255,255,.18) !important;
+              color:#F4F7FC !important; }
+.topbar .btn:hover{ background:rgba(255,255,255,.16) !important; }
+.topbar .btn.ghost{ background:rgba(255,255,255,.10) !important;
+  border:1px solid rgba(255,255,255,.24) !important; color:#EDEFFC !important; }
+.topbar .btn.ghost:hover{ background:rgba(255,255,255,.18) !important; color:#FFF !important; }
+/* «Выйти» — крупнее: в шапке она одна, мельчить незачем */
+.topbar .btn{ padding:10px 20px !important; font-size:15px !important; border-radius:9px !important; }
+
+/* =====================================================================
+   СОДЕРЖИМОЕ УРОКОВ — места, где в книге цвет прописан жёстко
+   ===================================================================== */
+.callout{ border-radius:var(--r-md); }
+.callout.warn{ background:#FFF3E6 !important; }
+.callout.note{ background:#FFFAE9 !important; }
+.callout.tip { background:var(--teal-tint) !important; }
+.parts-thumbs .thumb{ background:#FFF !important; border-radius:var(--r-sm); }
+
+/* блоки кода оставляем тёмно-синими — на светлой странице так принято,
+   и они перекликаются с панелями */
+.code{ background:#040057 !important; color:#E8ECFB !important;
+       border:1px solid #2B2B92; border-radius:var(--r-md); overflow:hidden; }
+.code-head{ background:#0D0D6B !important; border-bottom:1px solid #2B2B92 !important;
+            color:#9EA6D8 !important; }
+.copy-btn{ border:1px solid rgba(255,255,255,.24) !important; color:#C3D0E4 !important; border-radius:6px; }
+.copy-btn.copied{ color:#5FD6A4 !important; border-color:#5FD6A4 !important; }
+/* комментарии в коде были тёмно-оливковыми — на синем фоне почти не видны */
+.code .cm{ color:#9098D0 !important; }
+.code .op{ color:#CBD1F0 !important; }
+
+.lesson img, .lesson image-slot{ border-radius:var(--r-sm); }
+
+/* Шапка проекта. В книге строка «Часть 4 / Проект четвёртый / …» лежала
+   вплотную к названию ради экономии места на листе — на экране разводим. */
+.lesson .proj-eyebrow{ margin-bottom:16px !important; line-height:1.6 !important;
+                       font-family:var(--sans) !important; text-transform:none !important;
+                       letter-spacing:0 !important; font-size:13.5px !important;
+                       font-weight:600 !important; color:var(--ink-3) !important; }
+.lesson .proj-title{ line-height:1.18 !important; margin-bottom:16px !important;
+                     padding-bottom:2px !important; overflow:visible !important; }
+/* Описание проекта: курсив на целом абзаце тормозит чтение и выглядит
+   как чужая вёрстка. Прямое начертание, крупнее, ограниченная строка. */
+.lesson .proj-lede{ font-style:normal !important; font-size:17px !important;
+  line-height:1.6 !important; color:var(--ink-2) !important; max-width:58ch !important;
+  margin-top:2px !important; }
+
+.lesson .proj-header{ margin-bottom:10px !important; }
+
+/* Большие цифры — номер проекта и номер части.
+   Были красной курсивной антиквой: красный на платформе означает «застрял»,
+   и самый крупный знак урока не должен быть выкрашен в цвет тревоги.
+   Тот же Inter, что везде, и фирменный тёмно-синий. */
+.lesson .proj-num, .lesson .num{
+  font-family:var(--sans) !important; font-style:normal !important;
+  font-weight:700 !important; color:#BCC8DD !important;
+  letter-spacing:-.04em !important; }
+/* Межстрочный меньше единицы поднимал цифру выше её места — выравниваем
+   верх цифры по первой строке текста справа. */
+.lesson .proj-num{ line-height:1 !important; padding-top:36px !important; }
+.lesson .num{ line-height:1 !important; margin-top:12px !important; }
+/* Тот же KPI-ряд, только внутри урока: сложность, время, компоненты,
+   библиотеки. Подписи обычными буквами, значения крупнее, линии тоньше. */
+.lesson .proj-stats{ margin-top:10px !important; margin-bottom:20px !important;
+  border-top:1px solid var(--rule) !important; border-bottom:1px solid var(--rule) !important;
+  padding:12px 0 !important; }
+.lesson .proj-stat{ padding:0 22px 0 0 !important; border-right:1px solid var(--rule) !important; }
+.lesson .proj-stat:not(:first-child){ padding-left:22px !important; }
+.lesson .proj-stat:last-child{ border-right:0 !important; }
+.lesson .proj-stat .l{ font-family:var(--sans) !important; text-transform:none !important;
+  letter-spacing:0 !important; font-size:12px !important; font-weight:500 !important;
+  color:var(--ink-3) !important; margin-bottom:5px !important; }
+.lesson .proj-stat .v{ font-family:var(--sans) !important; font-size:19px !important;
+  font-weight:600 !important; letter-spacing:-.02em !important;
+  font-variant-numeric:normal !important; color:var(--ink) !important; line-height:1.15 !important; }
+.lesson .proj-stat .v.stars{ font-size:17px !important; letter-spacing:.06em !important; }
+
+/* -----------------------------------------------------------------
+   Состав набора. В книге 36 компонентов уложены по пять в ряд, чтобы
+   влезть в лист — на экране подписи из-за этого нечитаемые.
+   Здесь: меньше карточек в ряду, крупнее фото и текст.
+   Печатной книги это не касается — она этот файл не подключает.
+   ----------------------------------------------------------------- */
+.lesson .comp-grid{ grid-template-columns:repeat(auto-fit,minmax(250px,1fr)) !important;
+                    border:1px solid var(--rule-strong); border-right:0; border-bottom:0;
+                    border-radius:var(--r-md); overflow:hidden; }
+/* Таблица набора шире колонки текста — выходит за её края и занимает
+   всё свободное место. Текст при этом остаётся узким и читаемым. */
+@media(min-width:1500px){ .lesson .comp-grid{ margin-left:-70px; margin-right:-70px; } }
+@media(min-width:1800px){ .lesson .comp-grid{ margin-left:-130px; margin-right:-130px; } }
+.lesson .comp{ min-height:0 !important; padding:14px 14px 16px !important; gap:6px !important;
+               background:#FFF !important; }
+.lesson .comp-head{ font-size:10px !important; letter-spacing:.1em !important; }
+.lesson .comp-icon{ height:108px !important; background:var(--paper-3);
+                    border-radius:var(--r-sm); margin-top:auto; }
+.lesson .comp-icon img{ object-fit:contain !important; padding:6px; }
+.lesson .comp-name{ font-size:12px !important; line-height:1.25 !important; }
+.lesson .comp-desc{ font-size:10px !important; line-height:1.5 !important; }
+.lesson .code pre, .lesson .code{ color:#E8ECFB !important; }
+
+/* =====================================================================
+   ПЛАТФОРМА: кабинеты
+   ===================================================================== */
+.panel, .card, .stat, .pcard, .scrollx{ border-radius:var(--r-lg) !important;
+         border:1px solid var(--rule) !important; background:var(--paper-2) !important;
+         box-shadow:var(--shadow-sm); }
+/* Заголовок раздела больше не подчёркнут, и вокруг него другой воздух.
+
+   Что было не так. Отступы почти симметричные: 34 сверху, 25 снизу (9 до
+   линии плюс 16 после). Заголовок висел ровно посередине между двумя
+   блоками, и глаз не понимал, к какому он относится — к тому, что выше,
+   или к тому, что ниже. А линия под ним оказывалась второй горизонтальной
+   чертой в шестнадцати пикселях от рамки следующей карточки: две почти
+   слипшиеся линии подряд и давали ощущение мешанины.
+
+   Стало: 60 сверху, 18 снизу, линии нет. Заголовок явно принадлежит тому,
+   что под ним, между разделами появился воздух, а роль разделителя взяла
+   на себя рамка самой карточки — она там и так есть. */
+.section-head{ border-bottom:0 !important; padding-bottom:0 !important;
+               margin:60px 0 18px !important; }
+.section-head:first-child{ margin-top:26px !important; }
+@media(max-width:640px){ .section-head{ margin:40px 0 14px !important; } }
+.tabs{ border-bottom:1px solid var(--rule-strong) !important; }
+.tabs button{ border:1px solid var(--rule) !important; border-bottom:0 !important;
+              background:var(--paper-2) !important; color:var(--ink-2) !important;
+              border-radius:var(--r-sm) var(--r-sm) 0 0 !important; }
+.tabs button.on{ background:var(--navy) !important; border-color:var(--navy) !important; color:#FFF !important; }
+
+.btn{ border:1px solid var(--rule-strong) !important; background:#FFF !important;
+      color:var(--ink) !important; border-radius:var(--r-sm) !important; font-weight:500;
+      box-shadow:var(--shadow-sm); }
+/* При наведении кнопка заливается фирменным синим — видно, что попал */
+.btn:hover{ background:var(--navy) !important; border-color:var(--navy) !important; color:#FFF !important; }
+/* Кнопка «Открыть урок» в блоке урока — крупнее остальных, она там главная */
+#lopen{ font-size:17px !important; padding:12px 23px !important; }
+
+/* Главные кнопки — фирменным синим шапки, чтобы цвет действия был один на весь сайт */
+.btn.primary{ background:var(--navy) !important; border-color:var(--navy) !important;
+              color:#FFF !important; font-weight:600; }
+.btn.primary:hover{ background:#1B1B8C !important; border-color:#1B1B8C !important; }
+.btn.ghost{ background:#FFF !important; border-color:var(--rule-strong) !important; color:var(--ink-2) !important; }
+.btn.ghost:hover{ background:var(--navy) !important; border-color:var(--navy) !important; color:#FFF !important; }
+
+.hero{ border:1px solid #2B2B92 !important; border-radius:var(--r-lg) !important;
+       background:linear-gradient(135deg,#040057 0%,#1E1E96 100%) !important;
+       color:#F4F7FC !important; box-shadow:var(--shadow);
+       /* внутри блока переменные светлые — любой текст на нём читается */
+       --ink:#FFFFFF; --ink-2:#D8DBF4; --ink-3:#A6ADDE; --ink-4:#8E96CF;
+       --rule:rgba(255,255,255,.18); --rule-strong:rgba(255,255,255,.30); }
+.hero{ position:relative !important; overflow:hidden !important; }
+/* Фотография текущего проекта справа: затемнена и растворяется в синий,
+   поэтому не мешает белому тексту слева. */
+.hero-photo{ position:absolute !important; top:0; right:0; bottom:0; left:38%;
+  z-index:0; background-size:cover; background-position:center 40%;
+  opacity:.42; filter:saturate(.85) brightness(.9);
+  -webkit-mask-image:linear-gradient(90deg, transparent 0%, rgba(0,0,0,.65) 45%, #000 100%);
+  mask-image:linear-gradient(90deg, transparent 0%, rgba(0,0,0,.65) 45%, #000 100%); }
+.hero > *:not(.hero-photo){ position:relative; z-index:1; }
+@media(max-width:860px){ .hero-photo{ display:none; } }
+.hero *{ color:inherit; }
+.hero .big, .hero .grow > div:first-child{ color:#FFF !important; }
+.hero .big small, .hero .big div{ color:#A6ADDE !important; }
+.hero .muted{ color:#D8DBF4 !important; }
+.hero .muted b{ color:#FFF !important; }
+.hero .bar{ background:rgba(255,255,255,.16) !important; border:0 !important; }
+.hero .bar i{ background:linear-gradient(90deg,#5FD6A4,#7FB6FF) !important; }
+.hero .btn{ background:rgba(255,255,255,.10) !important; border:1px solid rgba(255,255,255,.22) !important;
+            color:#FFF !important; }
+.hero .btn:hover{ background:rgba(255,255,255,.20) !important; }
+.hero .mark{ background:rgba(255,255,255,.10) !important; border:1px solid rgba(255,255,255,.22) !important;
+             color:#FFF !important; }
+.hero .mark .box{ border-color:rgba(255,255,255,.5) !important; }
+.hero .mark:hover{ background:var(--green) !important; border-color:var(--green) !important; }
+
+.bar{ background:var(--paper-3) !important; border:1px solid var(--rule) !important; }
+.bar i{ background:linear-gradient(90deg,var(--green),#5FD6A4) !important; }
+
+/* Экран входа: фотография справа, растворяется в белый.
+   Это витрина — единственное место, где фон уместен. На рабочих экранах
+   картинка под содержимым мешала бы читать статусы. */
+.login-bg{ position:fixed; top:0; right:0; bottom:0; left:50%; z-index:0; pointer-events:none;
+  background-color:#040057;
+  background-image:linear-gradient(160deg, rgba(4,0,87,.72) 0%, rgba(4,0,87,.92) 100%), var(--shot);
+  background-size:cover, cover; background-position:center, center 42%;
+  /* Длинное растворение: белый уходит далеко вправо, панель набирает
+     плотность только к правому краю — переход почти незаметный. */
+  -webkit-mask-image:linear-gradient(90deg, transparent 0%, rgba(0,0,0,.10) 18%,
+      rgba(0,0,0,.38) 38%, rgba(0,0,0,.72) 60%, rgba(0,0,0,.93) 80%, #000 100%);
+  mask-image:linear-gradient(90deg, transparent 0%, rgba(0,0,0,.10) 18%,
+      rgba(0,0,0,.38) 38%, rgba(0,0,0,.72) 60%, rgba(0,0,0,.93) 80%, #000 100%);
+  display:flex; align-items:flex-end; }
+/* Подпись сдвинута в плотную часть панели, но не в самый угол */
+.login-bg-cap{ margin-left:auto; padding:0 7vw 9vh 0; color:#FFF; }
+.login-bg-cap .n{ font-family:'Instrument Serif',Georgia,serif; font-size:46px; line-height:1.12;
+  color:#FFF; margin-bottom:14px; }
+.login-bg-cap .t{ font-size:19px; line-height:1.5; color:#C6D0EE; max-width:26ch; }
+.login{ position:relative; z-index:1; }
+/* Название школы — в левом верхнем углу страницы, как логотип, а не внутри
+   блока входа. На узком экране возвращается в поток над «Кто ты?». */
+.login-brand{ font-family:'Instrument Serif',Georgia,serif; font-size:31px; line-height:1;
+  letter-spacing:.03em; color:var(--navy); margin-bottom:34px; }
+@media(min-width:1100px){
+  .login-brand{ position:fixed; top:52px; left:48px; z-index:2; margin-bottom:0; }
+}
+/* Блок входа ближе к середине экрана — меньше вести мышь от центра */
+@media(min-width:1100px){ .login{ margin-left:max(6vw, calc(50vw - 520px)) !important;
+  margin-right:auto !important;
+  /* Отступ сверху был 18vh, и на невысоком окне (ноутбук, где вдобавок
+     сверху служебная полоса) вся страница входа переставала помещаться —
+     появлялась прокрутка на два-три десятка пикселей ни за чем. Теперь
+     отступ ограничен сверху: на высоком экране он почти прежний, на
+     низком уменьшается, и страница помещается целиком. */
+  margin-top:clamp(40px, 13vh, 150px) !important; } }
+@media(max-width:900px){ .login-bg{ display:none; } }
+
+.role{ border:1px solid var(--rule) !important; background:#FFF !important;
+       border-radius:var(--r-md) !important; box-shadow:var(--shadow-sm); }
+.role:hover{ border-color:var(--accent) !important; background:var(--paper-3) !important; }
+/* Кружок роли: заливка фирменным синим, буква белая. Тонкая обводка
+   на белом фоне читалась как серая, хотя цвет был синий. */
+.role .ic{ background:#040057 !important; border:0 !important; color:#FFFFFF !important;
+           font-weight:700 !important; }
+.role:hover .ic{ background:#1B1B8C !important; color:#FFF !important; }
+.name-list button{ border:1px solid var(--rule) !important; background:#FFF !important;
+                   border-radius:var(--r-sm) !important; }
+.name-list button:hover{ border-color:var(--accent) !important; background:var(--teal-tint) !important; }
+.field input, .field select, .field textarea{ background:#FFF !important;
+      border:1px solid var(--rule-strong) !important; border-radius:var(--r-sm) !important; color:var(--ink) !important; }
+.field input:focus, .field select:focus, .field textarea:focus{
+      border-color:var(--accent) !important; box-shadow:0 0 0 3px rgba(37,99,235,.14); }
+
+.pcard.done { border-color:var(--rule) !important;   background:var(--green-pale) !important; }
+.pcard.stuck{ border-color:var(--signal) !important; background:var(--signal-tint) !important; }
+.pcard.doing{ border-color:var(--warn) !important;   background:#FFF7E4 !important; }
+.pcard .note{ background:#FFF !important; border-left:3px solid var(--signal) !important; border-radius:6px; }
+/* Фотография собранного проекта: по названию не понять, что предстоит
+   собрать, а снимок отвечает на это мгновенно. */
+.pthumb{ position:relative; aspect-ratio:4/3; overflow:hidden; border-radius:10px;
+  background:var(--paper-3); border:1px solid var(--rule); margin-bottom:2px; }
+.pthumb img{ width:100%; height:100%; object-fit:cover; display:block;
+  transition:transform .35s ease; }
+.pcard:hover .pthumb img{ transform:scale(1.04); }
+
+.mark{ border:1px solid var(--rule-strong) !important; background:#FFF !important;
+       border-radius:var(--r-sm) !important; color:var(--ink-2) !important; }
+.mark .box{ border:1px solid var(--rule-strong) !important; background:#FFF !important; }
+.mark:hover{ border-color:var(--green) !important; color:var(--ink) !important; }
+.mark.on{ background:var(--green) !important; border-color:var(--green) !important; color:#FFF !important; }
+.mark.on .box{ background:#FFF !important; border-color:#FFF !important; color:var(--green) !important; }
+.mark.on:hover{ background:var(--green-dark) !important; border-color:var(--green-dark) !important; }
+
+.chip.doing{ background:var(--warn) !important; border-color:var(--warn) !important; color:#FFF !important; }
+.chip.stuck{ background:var(--signal) !important; border-color:var(--signal) !important; color:#FFF !important; }
+.chip.done { background:var(--green)  !important; border-color:var(--green)  !important; color:#FFF !important; }
+.chip.todo { border-color:var(--rule-strong) !important; color:var(--ink-3) !important; }
+
+table.mx th, table.mx td{ border-color:var(--rule) !important; }
+/* Таблица группы была набрана мелко под лист — на экране увеличиваем умеренно. */
+table.mx{ font-size:13.5px !important; }
+table.mx thead th{ font-size:13.5px !important; padding:11px 5px !important; }
+table.mx tbody th{ font-size:17px !important; padding:10px 16px !important; }
+table.mx td.cell{ width:36px !important; height:36px !important; }
+.cell i{ line-height:36px !important; font-size:13.5px !important; }
+table.mx tbody td:last-child{ font-size:17px !important; font-weight:600; padding:0 14px !important; }
+table.mx thead th{ background:var(--paper-3) !important; color:var(--ink-2) !important; }
+table.mx tbody th{ background:#FFF !important; border-right:1px solid var(--rule-strong) !important; }
+table.mx thead th a.mxh{ color:var(--ink-2) !important; }
+table.mx thead th a.mxh:hover{ background:var(--navy) !important; color:#FFF !important; }
+.cell .s-todo{ background:#FFF !important; }
+.cell .s-doing{ background:var(--warn) !important; color:#FFF !important; }
+.cell .s-stuck{ background:var(--signal) !important; color:#FFF !important; }
+.cell .s-done { background:var(--green)  !important; color:#FFF !important; }
+.legend i[style*="F0D98A"]{ background:var(--warn) !important; }
+.legend i{ border:1px solid var(--rule-strong) !important; border-radius:3px;
+           width:16px !important; height:16px !important; }
+/* Легенда под таблицей была набрана мелким моношрифтом — не читалась. */
+.legend{ font-size:13.5px !important; gap:12px 22px !important; margin-top:14px !important;
+         align-items:center; line-height:1.5; }
+.legend span{ gap:8px !important; }
+.legend .muted{ font-family:var(--sans) !important; font-size:13.5px !important; }
+table.list th{ border-bottom:1px solid var(--rule-strong) !important; color:var(--ink-3) !important; }
+table.list td{ border-bottom:1px solid var(--rule) !important; }
+/* Блок «Кому нужна помощь» — преподаватель читает его на ходу, стоя у стола. */
+.stuck-item{ border-bottom:1px solid var(--rule) !important; padding:18px 0 !important; gap:16px !important; }
+.stuck-item .nm{ font-size:19px !important; }
+.stuck-item .muted{ font-size:17px !important; }
+.stuck-item .qt{ font-size:17px !important; padding:11px 15px !important; line-height:1.55; }
+.stuck-item .badge{ width:54px !important; height:54px !important; font-size:17px !important; }
+.stuck-item .btn.sm{ font-size:15px !important; padding:9px 17px !important; }
+
+/* KPI-ряд. Плашка — это подпись плюс число, и всё. Рамка вокруг числа
+   спорит с ним за внимание: глаз ловит прямоугольник раньше цифры.
+   Разделяем воздухом и одной волосяной линией, как принято на учебных
+   платформах, а не карточками. */
+.stat-row{ gap:0 !important; margin:26px 0 30px !important; padding:20px 0 !important;
+           border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); }
+.stat{ background:transparent !important; border:0 !important; box-shadow:none !important;
+       border-radius:0 !important; padding:2px 26px 2px 0 !important; }
+.stat + .stat{ border-left:1px solid var(--rule) !important; padding-left:26px !important; }
+.stat .l{ font-weight:500 !important; }
+.stat .v{ font-size:46px !important; font-weight:600 !important; letter-spacing:-.025em !important;
+          font-variant-numeric:normal !important; color:var(--ink) !important; }
+.stat .v small{ font-size:17px !important; font-weight:400 !important; color:var(--ink-3) !important; }
+/* Крупные числа — обычными пропорциональными цифрами */
+.hero .big{ font-variant-numeric:normal !important; }
+/* Кружок с номером проекта — указатель, а не статус: спокойный синий.
+   Красный в этом блоке ничего не выделял, потому что застряли все. */
+.stuck-item .badge{ background:#040057 !important; color:#FFFFFF !important;
+  border:0 !important; font-weight:700 !important; }
+.stuck-item .qt{ background:var(--paper) !important; border-left:3px solid var(--rule-strong) !important; border-radius:6px; }
+
+.modal-bg{ background:rgba(22,35,61,.45) !important; backdrop-filter:blur(3px); }
+.modal{ background:#FFF !important; border:1px solid var(--rule-strong) !important;
+        border-radius:var(--r-lg) !important; box-shadow:var(--shadow); }
+/* Полоска демо-режима. Была кричаще-жёлтой с моноширинным текстом и первой
+   бросалась в глаза — выглядела как отладочная строка. Тихая служебная
+   плашка: сообщает и не мешает. */
+.demo-flag{ background:#EDF1F8 !important; border-bottom:1px solid var(--rule) !important;
+  color:var(--ink-3) !important; font-family:var(--sans) !important;
+  font-size:13.5px !important; letter-spacing:0 !important; text-transform:none !important;
+  padding:9px 20px !important; font-weight:500; }
+.demo-flag b{ color:var(--ink-2); font-weight:600; }
+.reset-demo{ font-family:var(--sans) !important; font-size:13.5px !important;
+  color:var(--ink-2) !important; border-bottom:1px solid var(--rule-strong) !important;
+  margin-left:6px; }
+.reset-demo:hover{ color:var(--navy) !important; border-bottom-color:var(--navy) !important; }
+
+
+/* =====================================================================
+   ТЕЛЕФОН И УЗКИЙ ЭКРАН
+   Уроки собраны из книжной вёрстки, где ширины заданы в миллиметрах под
+   лист А4. На узком экране это давало горизонтальную прокрутку. Здесь всё
+   такое расшивается. Печатной книги это не касается — она этот файл
+   не подключает и печатается как раньше.
+   ===================================================================== */
+@media(max-width:820px){
+
+  /* блоки текста, ограниченные шириной листа */
+  .lesson .lede, .lesson .proj-lede, .lesson .cover-subtitle,
+  .lesson .cover-tagline, .lesson .section-opener .lede{ max-width:100% !important; }
+
+  /* двухколоночные сетки книги — в одну колонку */
+  .lesson .proj-header{ grid-template-columns:1fr !important; gap:8px !important; }
+  .lesson .proj-body{ grid-template-columns:1fr !important; gap:18px !important; }
+  .lesson .section-opener .toc-row{ grid-template-columns:auto 1fr auto !important; }
+
+  /* огромный номер проекта — по размеру экрана */
+  .lesson .proj-num{ font-size:56px !important; padding-top:0 !important; }
+  .lesson .num{ font-size:64px !important; }
+  .lesson .proj-title{ font-size:37px !important; }
+  .lesson .h-display, .lesson .cover-title{ font-size:31px !important; line-height:1.1 !important; }
+
+  /* ряд «сложность / время / компонентов / библиотеки» — в две колонки */
+  .lesson .proj-stats{ grid-template-columns:1fr 1fr !important; row-gap:12px !important; }
+  .lesson .proj-stat{ padding:0 14px 0 0 !important; }
+  .lesson .proj-stat:nth-child(2n){ border-right:0 !important; }
+  .lesson .proj-stat:nth-child(n+3){ padding-top:12px !important;
+    border-top:1px solid var(--rule) !important; }
+
+  /* состав набора — по одной карточке в ряд, без выхода за края */
+  .lesson .comp-grid{ grid-template-columns:1fr 1fr !important;
+    margin-left:0 !important; margin-right:0 !important; }
+
+  /* таблицы и код прокручиваются внутри себя, а не тянут страницу вбок */
+  .lesson table{ display:block !important; max-width:100% !important; overflow-x:auto !important; }
+  .lesson .code, .lesson pre{ max-width:100% !important; overflow-x:auto !important; }
+  .lesson img, .lesson image-slot{ max-width:100% !important; height:auto !important; }
+
+  /* ленты миниатюр не должны распирать страницу */
+  .lesson .parts-thumbs, .lesson .parts-thumbs-full{ flex-wrap:wrap !important; }
+
+  /* ---- кабинеты ---- */
+  /* 64px было рассчитано на текстовое название. Полный знак со слоганом
+     выше — в диапазоне 761–820px он упирался в края шапки. */
+  .topbar-in{ min-height:72px !important; padding:10px 20px !important; }
+  .topbar .brand{ font-size:22px !important; }
+  .topbar .who{ font-size:12px !important; }
+  .topbar .who b{ font-size:13.5px !important; }
+  .wrap{ padding-left:16px !important; padding-right:16px !important; }
+
+  /* KPI-ряд: на узком экране разделители-вертикали не работают */
+  .stat-row{ grid-template-columns:1fr 1fr !important; padding:16px 0 !important; }
+  .stat{ padding:8px 12px 8px 0 !important; }
+  .stat + .stat{ border-left:0 !important; padding-left:0 !important; }
+  .stat .v{ font-size:37px !important; }
+  .stat .l{ font-size:13.5px !important; }
+
+  .hero{ padding:20px !important; }
+  .hero .big{ font-size:46px !important; }
+  .hero-acts .btn, .hero-acts .mark{ flex:1 1 auto; justify-content:center; }
+
+  .stuck-item{ flex-wrap:wrap !important; }
+  .stuck-item > div:last-child{ flex-direction:row !important; flex-wrap:wrap; width:100%; }
+  .stuck-item .btn.sm{ flex:1 1 auto; }
+  .stuck-item .nm{ font-size:17px !important; }
+  .stuck-item .qt{ font-size:15px !important; }
+
+  .section-head h2{ font-size:26px !important; }
+  .login-brand{ font-size:26px !important; }
+
+  /* Полоска демо-режима на телефоне: мельче и плотнее, иначе занимает
+     три строки и съедает верх экрана. */
+  .demo-flag{ font-size:12px !important; padding:6px 12px !important;
+    line-height:1.35 !important; }
+  .reset-demo{ font-size:12px !important; margin-left:4px; }
+}
+
+/* очень узкие телефоны */
+@media(max-width:430px){
+  .demo-flag{ font-size:10px !important; padding:5px 10px !important; }
+  .reset-demo{ font-size:10px !important; }
+  .lesson .comp-grid{ grid-template-columns:1fr !important; }
+  .lesson .proj-stats{ grid-template-columns:1fr !important; }
+  .lesson .proj-stat{ border-right:0 !important; padding:8px 0 !important;
+    border-top:1px solid var(--rule) !important; }
+  .stat-row{ grid-template-columns:1fr !important; }
+  .stat + .stat{ border-top:1px solid var(--rule) !important; padding-top:14px !important; }
+}
+
+/* =====================================================================
+   РАБОТА С КЛАВИАТУРЫ
+   По сайту можно ходить клавишей Tab, не касаясь мыши. Раньше не было
+   видно, на каком элементе стоишь. Обводка появляется только при работе
+   с клавиатуры (:focus-visible) — при клике мышью её нет.
+   ===================================================================== */
+:where(a, button, select, input, textarea, [tabindex]):focus{ outline:none; }
+:where(a, button, select, input, textarea, [tabindex]):focus-visible{
+  outline:3px solid #7FB6FF !important;
+  outline-offset:2px !important;
+  border-radius:6px;
+}
+/* На тёмно-синих панелях синяя обводка сливается — там белая */
+.topbar :focus-visible, .c-top :focus-visible, .c-rail :focus-visible,
+.hero :focus-visible, .login-bg :focus-visible{
+  outline-color:#FFFFFF !important;
+}
+/* Ссылка «перейти к содержимому» — первое, что получает фокус на странице */
+.skiplink{ position:absolute; left:-9999px; top:0; z-index:999;
+  background:var(--navy); color:#fff; padding:12px 18px; border-radius:0 0 8px 0;
+  font-weight:600; text-decoration:none; }
+.skiplink:focus{ left:0; }
+
+
+/* =====================================================================
+   ПУСТЫЕ СОСТОЯНИЯ
+   Момент, когда данных нет, должен выглядеть осмысленно, а не как сбой.
+   Особенно «никто не застрял» — это хорошая новость, а не пустота.
+   ===================================================================== */
+.empty{ text-align:center; padding:38px 24px !important;
+  font-family:var(--sans) !important; font-style:normal !important;
+  font-size:15px !important; color:var(--ink-3) !important; }
+.empty .ico{ width:54px; height:54px; border-radius:50%; margin:0 auto 16px;
+  display:grid; place-items:center; font-size:22px;
+  background:var(--paper-3); color:var(--ink-3); }
+.empty.ok .ico{ background:var(--green-tint); color:var(--green); font-weight:700; }
+.empty .t{ font-size:19px; font-weight:600; color:var(--ink); margin-bottom:8px; }
+.empty .s{ font-size:15px; color:var(--ink-3); line-height:1.55;
+  max-width:52ch; margin:0 auto; }
+table .empty{ padding:28px 16px !important; }
+
+
+/* =====================================================================
+   ОТКЛИК НА ДЕЙСТВИЕ
+   Нажатие должно быть подтверждено: кнопка проседает под пальцем,
+   изменённая карточка коротко подсвечивается, внизу появляется строка
+   с тем, что именно произошло. Полсекунды отклика отделяют приложение
+   от статичной страницы.
+   ===================================================================== */
+
+/* кнопка проседает при нажатии */
+.btn:active, .mark:active, .c-btn:active, .c-mark:active, .role:active{
+  transform:translateY(1px) scale(.995);
+}
+.btn, .mark, .c-btn, .c-mark, .role, .pcard, .name-list button{
+  transition:background .14s ease, border-color .14s ease, color .14s ease,
+             transform .08s ease, box-shadow .18s ease;
+}
+
+/* карточка чуть приподнимается под курсором */
+.pcard:hover{ box-shadow:0 4px 14px rgba(22,35,61,.09); transform:translateY(-2px); }
+
+/* подсветка карточки, которую только что изменили */
+@keyframes flashRing{
+  0%   { box-shadow:0 0 0 0 rgba(37,99,235,.55); }
+  35%  { box-shadow:0 0 0 7px rgba(37,99,235,.16); }
+  100% { box-shadow:0 0 0 0 rgba(37,99,235,0); }
+}
+.pcard.flash{ animation:flashRing 1.05s ease-out; }
+
+/* строка подтверждения внизу экрана */
+.toasts{ position:fixed; left:0; right:0; bottom:22px; z-index:300;
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  pointer-events:none; padding:0 16px; }
+.toast{ background:var(--navy); color:#fff; font-size:15px; font-weight:500;
+  padding:13px 22px; border-radius:12px; box-shadow:0 6px 26px rgba(4,0,87,.28);
+  opacity:0; transform:translateY(12px); transition:opacity .22s ease, transform .22s ease;
+  max-width:min(560px, 92vw); text-align:center; line-height:1.4; }
+.toast.in{ opacity:1; transform:translateY(0); }
+
+@media(prefers-reduced-motion:reduce){
+  .pcard.flash{ animation:none; }
+  .btn, .mark, .c-btn, .c-mark, .role, .pcard, .name-list button, .toast{ transition:none; }
+  .pcard:hover{ transform:none; }
+}
+
+
+/* =====================================================================
+   ОКНО «ЧТО НЕ ПОЛУЧАЕТСЯ» В УРОКЕ
+   Ребёнок упирается там, где читает и собирает, — значит и сказать об этом
+   он должен оттуда же, не возвращаясь в кабинет.
+   ===================================================================== */
+.c-modal-bg{ position:fixed; inset:0; z-index:400; display:grid; place-items:center;
+  background:rgba(22,35,61,.45); backdrop-filter:blur(3px); padding:20px; }
+.c-modal{ background:#fff; border:1px solid var(--rule-strong); border-radius:var(--r-lg);
+  box-shadow:var(--shadow); max-width:540px; width:100%; padding:26px; }
+.c-modal h3{ font-size:26px; font-weight:600; letter-spacing:-.015em; margin:0 0 8px; color:var(--ink); }
+.c-modal-sub{ font-size:15px; line-height:1.55; color:var(--ink-3); margin:0 0 18px; }
+.c-modal textarea{ width:100%; box-sizing:border-box; font-family:var(--sans); font-size:17px;
+  line-height:1.5; color:var(--ink); background:#fff; padding:12px 14px;
+  border:1px solid var(--rule-strong); border-radius:var(--r-sm); resize:vertical; }
+.c-modal textarea:focus{ outline:none; border-color:var(--navy);
+  box-shadow:0 0 0 3px rgba(4,0,87,.12); }
+.c-modal-acts{ display:flex; gap:10px; justify-content:flex-end; margin-top:18px; }
+.c-btn.primary{ background:var(--navy) !important; border-color:var(--navy) !important;
+  color:#fff !important; font-weight:600; }
+.c-btn.primary:hover{ background:#1B1B8C !important; border-color:#1B1B8C !important; }
+/* кнопка, когда сообщение уже отправлено */
+.c-btn.stuck{ border-color:var(--signal) !important; color:var(--signal) !important; }
+.c-btn.stuck:hover{ background:var(--signal) !important; border-color:var(--signal) !important;
+  color:#fff !important; }
+@media(max-width:430px){
+  .c-modal{ padding:20px; }
+  .c-modal h3{ font-size:22px; }
+  .c-modal-acts .c-btn{ flex:1; }
+}
+
+
+/* Карточка проекта целиком открывает урок — отдельная кнопка «Урок» убрана.
+   Курсор и подъём при наведении показывают, что по ней можно нажать. */
+.pcard.clickable{ cursor:pointer; }
+.pcard.clickable:hover h3{ color:var(--navy); }
+.pcard.clickable:focus-visible{ outline:3px solid #7FB6FF; outline-offset:3px; }
+/* Кнопки внутри карточки живут своей жизнью и урок не открывают */
+.pcard .acts .btn, .pcard .mark{ cursor:pointer; }
+
+
+/* Строка-разделитель группы в таблице «Все ученики по проектам».
+   Прижата к левому краю и не липнет при прокрутке — это заголовок, а не имя. */
+table.mx tbody tr.mx-grp th{ position:static !important; text-align:left !important;
+  background:var(--paper-3) !important; color:var(--ink) !important;
+  font-size:16px !important; font-weight:600 !important;
+  padding:12px 15px !important; border-right:0 !important;
+  border-top:1px solid var(--rule-strong) !important; }
+table.mx tbody tr.mx-grp th .s{ font-weight:500; font-size:13.5px; color:var(--ink-3); }
+@media(max-width:820px){
+  table.mx tbody tr.mx-grp th{ font-size:14px !important; padding:10px 12px !important; }
+  table.mx tbody tr.mx-grp th .s{ display:block; margin-top:3px; }
+}
+
+
+/* =====================================================================
+   ПАНЕЛЬ ДИРЕКТОРА: темп, воронка, списки «требуют внимания»
+   Один цвет на все столбики — сравнивается высота, а не оттенок.
+   Текущая неделя выделена насыщенностью, не другим цветом.
+   ===================================================================== */
+.cardh{ font-size:19px !important; font-weight:600 !important; color:var(--ink) !important;
+  letter-spacing:-.015em !important; margin:0 0 14px !important; }
+
+.spark{ display:flex; align-items:flex-end; gap:10px; height:104px; margin-top:22px; }
+.spark .col{ flex:1; display:flex; align-items:flex-end; height:100%; }
+.spark .col i{ display:block; width:100%; min-height:4px;
+  background:var(--navy); opacity:.32; border-radius:3px 3px 0 0;
+  transition:opacity .15s ease; }
+.spark .col.now i{ opacity:1; }
+.spark .col:hover i{ opacity:.62; }
+.spark .col.now:hover i{ opacity:1; }
+.spark-x{ display:flex; gap:10px; margin-top:9px; }
+.spark-x span{ flex:1; text-align:center; font-size:12px; color:var(--ink-3); }
+.spark-x span:last-child{ color:var(--ink); font-weight:600; }
+
+.funnel .fr + .fr{ margin-top:20px; }
+.funnel .fh{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:8px; }
+.funnel .ft{ font-size:15px; font-weight:600; color:var(--ink); }
+.funnel .fv{ font-size:22px; font-weight:600; color:var(--ink); letter-spacing:-.02em; }
+.funnel .fv small{ font-size:13.5px; font-weight:400; color:var(--ink-3); }
+.funnel .fs{ font-size:13.5px; color:var(--ink-3); margin-top:7px; }
+
+/* Таблица внутри карточки: на телефоне прокручивается сама,
+   вместо того чтобы растягивать всю страницу вбок. */
+.tscroll{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.tscroll table.list{ min-width:100%; }
+.tscroll{ min-width:0; }
+
+/* На телефоне таблица шире экрана растягивала всю страницу вбок: колонку
+   грида надо явно разрешить сжимать (min-width:0), иначе она раздувается
+   до ширины содержимого. Сама таблица после этого прокручивается внутри
+   карточки, а страница остаётся ровно по ширине экрана. */
+@media(max-width:760px){
+  .two > *{ min-width:0; }
+  .card{ overflow-x:auto; }
+}
+
+/* На телефоне в списке «застряли» важно, кто и сколько дней ждёт.
+   Фраза ученика и название проекта туда не помещаются — их видно
+   на компьютере, а на узком экране колонки схлопываются до сути. */
+@media(max-width:760px){
+  .qn{ display:none !important; }
+  .pt{ display:none !important; }
+}
+@media(max-width:760px){
+  .tscroll table.list th, .tscroll table.list td{ padding-left:8px !important; padding-right:8px !important; }
+  .tscroll .chip{ padding:4px 7px !important; letter-spacing:.03em !important; }
+}
+
+
+/* =====================================================================
+   ЛОГОТИП ШКОЛЫ
+   Директор прислала официальный логотип. Он переведён в вектор
+   (logo.svg — белый для синих панелей, logo-blue.svg — для светлого
+   экрана входа), поэтому остаётся чётким на любом размере и не
+   зависит от того, установлен ли у человека нужный шрифт.
+   Раньше на этом месте стояло название школы антиквой — теперь настоящий знак.
+   ===================================================================== */
+.topbar .brand, .c-brand{ display:flex !important; align-items:center !important;
+  text-decoration:none !important; border-bottom:0 !important; flex:0 0 auto !important; }
+/* Компоновка: здание, под ним KUPUEV / ACADEMY, справа через разделитель —
+   слоган в две строки. Слоган разбит на две строки не для красоты: одной
+   строкой он вдвое длиннее и при той же ширине буквы вдвое мельче. */
+.topbar .brand img, .c-brand img{ display:block; height:54px; width:auto; }
+.login-brand img{ display:block; height:56px; width:auto; }
+@media(min-width:1400px){
+  .topbar .brand img, .c-brand img{ height:58px; }
+  .login-brand img{ height:62px; }
+}
+/* Ниже 760px слоган не помещается в строку рядом с названием. Остаётся
+   компактный блок «здание + KUPUEV ACADEMY» — он узкий и всё ещё называет школу. */
+.lg-mark{ display:none !important; }
+@media(max-width:760px){
+  .lg-wide{ display:none !important; }
+  .lg-mark{ display:block !important; }
+  .topbar .brand img, .c-brand img{ height:40px; }
+  .login-brand img{ height:42px; }
+}
+
+/* Ниже 760px в шапке только знак 36px — там компактная высота снова уместна. */
+@media(max-width:760px){
+  .topbar-in{ min-height:62px !important; padding:8px 16px !important; }
+}
+
+
+/* =====================================================================
+   ЧИТАЕМОСТЬ УРОКА
+
+   Главное, что нужно знать, прежде чем трогать кегли в уроке:
+   страница урока — это вёрстка печатной книги в миллиметрах, и она
+   увеличена целиком через `zoom` (см. шаблон-курса.html). Поэтому
+   в стилях у абзаца написано 12,4px, а на экране он выглядит как 17px.
+   Менять размер шрифта по отдельности нельзя — развалится вся
+   внутренняя иерархия книги. Размер регулируется одним zoom.
+
+   Замер до правки на экране 1440: текст 17px в строке на 1020px —
+   это 165 символов. Норма для чтения 60–75: глаз, дойдя до конца
+   строки, не находит начало следующей. Отсюда и ощущение «шрифт
+   крупный» — крупным кажется не буква, а вся масса текста.
+   ===================================================================== */
+
+/* --- размер: одним zoom, а не по каждому элементу ---
+
+   ШКАЛА ОПУЩЕНА (было 1.22 / 1.25 / 1.30). Причина: множитель раздувает
+   не только буквы, но и все отступы книжной вёрстки, поэтому на экран
+   влезало мало текста, и Максат читал урок «в форточку». Один урок —
+   около 15 экранов прокрутки, и это чувствовалось.
+
+   Обмен тут прямой и третьего не бывает: крупные буквы ИЛИ больше текста
+   на экране. Выбрали второе. При 1.15 текст на экране около 14.3px
+   (в стилях книги 12.4), символов в строке столько же — и кегль, и
+   ограничение меры масштабируются одним множителем, поэтому мера в
+   символах от него не зависит. Ниже 1.10 не опускать: буквы уйдут под
+   13px, а это абзацы, которые читают дети.
+
+   ВТОРОЕ ИСПРАВЛЕНИЕ — лестница теперь смотрит и на ВЫСОТУ окна, а не
+   только на ширину. Раньше она росла по одной ширине, и на ноутбуке
+   1920x950 (широкий, но низкий) урок получал самый большой множитель
+   при самом маленьком запасе высоты — то есть ровно наоборот. Крупный
+   кегль имеет смысл, когда окно и высокое тоже. */
+.lesson{ zoom:1.15 !important; }
+@media(min-width:1400px) and (min-height:1000px){ .lesson{ zoom:1.18 !important; } }
+@media(min-width:1700px) and (min-height:1200px){ .lesson{ zoom:1.22 !important; } }
+/* На телефоне книга шла вообще без увеличения — 12px, слишком мелко. */
+@media(max-width:820px){ .lesson{ zoom:1.12 !important; } }
+
+/* --- мера строки ---
+   450px в стилях при zoom 1,25 дают на экране 560px и около 72 символов.
+   Единицу ch не используем: она считается по ширине нуля в текущем шрифте,
+   и пока Inter не загрузился, ширина уезжает в полтора раза. */
+.lesson .pages > p,
+.lesson .pages > ul,
+.lesson .pages > ol,
+.lesson .pages > .callout,
+.lesson .proj-body > div > p,
+.lesson .proj-body > div > ul,
+.lesson .proj-body > div > .callout,
+.lesson .proj-side p{ max-width:450px !important; }
+.lesson .proj-lede{ max-width:560px !important; }
+
+/* ============ ГДЕ СТОИТ КОЛОНКА ТЕКСТА ============
+
+   Замер, с которого всё началось (окно 1754, страница урока была 1332px):
+   абзац теории 518px стоял вплотную к ЛЕВОМУ краю страницы, за 54
+   пикселями от тёмной панели меню с белыми словами, а справа от него
+   пустовало 815 пикселей — 61% ширины. Отсюда жалоба «столбец слипся с
+   меню, слова на синем мешают читать».
+
+   ПРОБОВАЛИ ПОСТАВИТЬ ПРОЗУ ПО ЦЕНТРУ страницы — не годится, и это
+   стоит запомнить, чтобы не возвращаться. Проза встала ровно посередине,
+   но между меню и текстом открылась пустая полоса в 503 пикселя: текст
+   превратился в узкую ленту, потерянную в белом поле, и глаз перелетает
+   через пустоту вместо того, чтобы просто спуститься на строку ниже.
+   Плюс левый край текста перестал совпадать с левым краем таблиц и кода —
+   а именно по левому краю глаз находит начало следующей строки.
+
+   ЧТО СДЕЛАНО ВМЕСТО. Три вещи вместе:
+
+   1. Зазор от меню 150 пикселей вместо 54 — `.c-shell{gap}` ниже плюс
+      отступ самой колонки. Панель читается как отдельный предмет,
+      её слова больше не лезут в строку.
+   2. Проза осталась у ЛЕВОГО края — одна вертикаль с таблицами и кодом.
+   3. Страница сужена до 1000 пикселей на экране (было 1332). Это главное:
+      замер показал, что коду нужно всего 573 пикселя (самая длинная
+      строка — 78 символов), а таблицы просто занимают всё, что дают.
+      То есть 1332 были не нужны никому — от них лист выглядел огромным,
+      а текст на нём лентой.
+
+   Итог: текст, таблицы и код стоят на одной вертикали, лист компактный,
+   от меню отбита ощутимая полоса воздуха.
+
+   Меняешь ширину страницы — помни, что значение в CSS-пикселях, а на
+   экране оно умножается на zoom урока (сейчас 1.15): 870 x 1.15 = 1000. */
+.lesson .pages{ max-width:870px !important; }
+
+/* Две колонки под шапкой были 189 + 524: в узкой умещалось 40 символов,
+   слова рвались через одно. Выравниваем ближе к равным. */
+@media(min-width:821px){
+  .lesson .proj-body{ grid-template-columns:minmax(240px,.9fr) 1.1fr !important;
+                      gap:38px !important; }
+}
+
+/* Подзаголовок был всего на четверть крупнее текста — раздел не читался
+   как раздел. Разводим по размеру и даём воздух сверху. */
+.lesson h3.h-sub{ font-size:19px !important; line-height:1.35 !important;
+  margin-top:30px !important; margin-bottom:10px !important; }
+
+/* --- левое меню: это список для выбора, а не текст для чтения --- */
+/* МЕНЮ УРОКОВ СЖАТО ЕЩЁ РАЗ (было 13.5-14px, отступы 9x22 и 9x24).
+
+   Это список для выбора, а не текст для чтения: сюда смотрят секунду,
+   чтобы ткнуть в нужный проект. Раньше 22 пункта не влезали в экран и
+   меню приходилось прокручивать отдельно от урока — а прокрутка внутри
+   прокрутки всегда сбивает. Теперь при высоте окна от 800 видны все 22.
+
+   Ширина самой рельсы (264 / 276 / 286) живёт в шаблоне-курса, там же
+   и предупреждение про связку с полоской прогресса. */
+.c-item{ font-size:12.5px !important; padding:7px 16px !important;
+  gap:8px !important; line-height:1.35 !important; }
+.c-item .c-n{ font-size:10px !important; flex:0 0 18px !important; }
+.c-item .c-ok{ font-size:12px !important; flex:0 0 13px !important; }
+@media(min-width:1400px){ .c-item{ font-size:12.5px !important; padding:7px 18px !important; } }
+@media(min-width:1700px){ .c-item{ font-size:13px !important; } }
+.c-rail-h{ font-size:10px !important; padding:14px 18px 7px !important; }
+
+/* На телефоне книжные двухколоночные блоки не схлопывались: при zoom 1
+   они кое-как влезали, при 1.2 стали распирать страницу вбок. */
+@media(max-width:820px){
+  .lesson .grid-2, .lesson .grid-3, .lesson .proj-body{
+    grid-template-columns:1fr !important; }
+  .lesson .grid-2 > *, .lesson .grid-3 > *{ min-width:0 !important; }
+  /* «Идеи для развития» шли в ряд — на телефоне ряд шире экрана */
+  .lesson .ideas{ display:block !important; }
+  .lesson .idea{ width:auto !important; max-width:100% !important; margin-bottom:8px;
+                 flex-wrap:wrap !important; }
+  /* Длинные имена команд не переносятся сами и распирают строку */
+  .lesson code, .lesson .mono{ overflow-wrap:anywhere !important; word-break:break-word !important; }
+  /* Текст внутри плашки — гибкий элемент: без min-width:0 он не сжимается
+     меньше своего содержимого и выпирает за экран. */
+  .lesson .callout > *{ min-width:0 !important; max-width:100% !important; }
+  /* Заголовок раздела вёрстан под А4 и не помещался в ширину телефона */
+  .lesson .section-opener h2.title, .lesson h2.title{
+    font-size:28px !important; line-height:1.15 !important;
+    overflow-wrap:break-word !important; }
+  /* Колонки блока «чему научишься / что увидишь» не сжимались до ширины экрана */
+  .lesson .proj-body > *{ min-width:0 !important; max-width:100% !important; }
+  /* Длинные подписи в списках деталей и ссылок */
+  .lesson .parts-list span, .lesson .q, .lesson .parts-list li,
+  .lesson .parts-list a, .lesson .q *{
+    overflow-wrap:anywhere !important; word-break:break-word !important;
+    white-space:normal !important; max-width:100% !important; }
+  /* Таблицы распиновки шире экрана — пусть прокручиваются сами */
+  .lesson table, .lesson table.pinout{ display:block !important;
+    overflow-x:auto !important; max-width:100% !important; width:auto !important; }
+  /* В книге многое выложено рядами: миниатюры деталей, ссылки, значки.
+     На листе А4 ряд помещался, на телефоне — нет. Разрешаем переносить.
+     Для не-флексовых элементов правило ничего не делает. */
+  .lesson .pages div, .lesson .pages li, .lesson .pages ul{ flex-wrap:wrap !important; }
+}
+
+/* Когда ученик написал «не получается»: справа в строке с именем, мелко
+   и приглушённо. Преподаватель считывает имя, а время замечает только
+   когда оно ему нужно — глазу оно не мешает. */
+/* Время стоит сразу за именем, а не у правого края: карточка широкая,
+   и у края оно отрывалось от имени и липло к кнопкам справа. */
+.stuck-item .nm-row{ display:flex; align-items:baseline; gap:12px;
+  justify-content:flex-start; flex-wrap:wrap; }
+.stuck-item .nm-row .nm{ font-size:19px !important; }
+.stuck-item .when{ flex:none; font-size:13.5px !important; font-weight:400 !important;
+  color:var(--ink-3) !important; white-space:nowrap; }
+@media(max-width:820px){
+  .stuck-item .nm-row{ gap:6px; }
+  .stuck-item .when{ font-size:12px !important; }
+}
+
+/* На телефоне выпадающий список групп не сжимался: длинное название
+   («Робототехника · 7А · вт/чт 16:00 · ROBO-7A») распирало страницу вбок. */
+@media(max-width:820px){
+  .section-head{ flex-wrap:wrap !important; }
+  .section-head select{ width:100% !important; max-width:100% !important;
+    min-width:0 !important; }
+  .section-head .spacer{ display:none !important; }
+}
+
+/* ── «Кому нужна помощь»: строка вместо карточки ───────────────────────────
+   Высоту строки задавали не данные, а три кнопки, поставленные столбиком:
+   текст занимал 107px, а колонка кнопок 131px — и вся строка выходила 168px.
+   На экране ноутбука 1440×900 преподаватель видел одного застрявшего из пяти,
+   остальных приходилось искать прокруткой прямо на занятии.
+   Теперь: кнопки в ряд, название проекта переехало в строку с именем (номер
+   и так стоит в кружке слева, дублировать его текстом незачем), цитата без
+   серой плашки и с ограниченной мерой строки. Строка 168 → 75px. */
+.stuck-item{ padding:11px 0 !important; gap:13px !important; align-items:center !important; }
+.stuck-item .badge{ width:38px !important; height:38px !important; font-size:14px !important; }
+.stuck-item .nm-row{ gap:10px; }
+.stuck-item .nm-row .nm{ font-size:17.5px !important; }
+.stuck-item .proj{ font-size:15px !important; color:var(--ink-3); }
+.stuck-item .proj::before{ content:'· '; }
+/* Мера строки, как в уроках: длинная жалоба не должна тянуться через всю
+   карточку — глаз теряет начало следующей строки. */
+.stuck-item .qt{ max-width:620px; margin-top:2px; padding:0 !important;
+  background:none !important; border-left:0 !important;
+  font-size:15.5px !important; color:var(--ink-2) !important; }
+.stuck-item .qt.muted{ color:var(--ink-3) !important; }
+.stuck-item .acts{ display:flex; flex-direction:row; align-items:center; gap:8px; flex:none; }
+.stuck-item .btn.sm{ font-size:14px !important; padding:7px 13px !important; }
+
+/* Счётчик застрявших переехал из плашки в заголовок — одна вещь в одном месте.
+   Красный тут по смыслу: это тот же сигнал «застрял», что и везде в системе. */
+.section-head h2 .cnt{ display:inline-grid; place-items:center; min-width:30px; height:30px;
+  padding:0 9px; margin-left:12px; border-radius:15px; background:var(--signal); color:#fff;
+  font-family:var(--sans); font-size:16px; font-weight:600; vertical-align:middle; }
+
+/* Общие числа по группе теперь под списком: это цифры для отчёта, а не для
+   занятия. Отступ сверху, чтобы они не липли к последней строке списка. */
+.stat-row-after{ margin-top:26px; }
+
+@media(max-width:820px){
+  /* На телефоне кнопки уходят под текст и делят ширину поровну. */
+  .stuck-item{ align-items:flex-start !important; }
+  .stuck-item .acts{ flex-wrap:wrap; width:100%; margin-top:8px; }
+  .stuck-item .acts .btn.sm{ flex:1 1 auto; }
+  .stuck-item .qt{ max-width:100%; }
+  .section-head h2 .cnt{ min-width:26px; height:26px; font-size:14px; margin-left:9px; }
+}
+
+/* На узком экране (планшет, окно вполовину монитора) кнопки съедают ширину,
+   и время съезжало на отдельную строку, отрываясь от имени. Держим строку
+   «имя · проект · когда» единой, а длинное название проекта подрезаем
+   многоточием — номер всё равно стоит в кружке слева. */
+@media(min-width:821px){
+  .stuck-item .nm-row{ flex-wrap:nowrap; }
+  /* Имя не переносим и не сжимаем — по нему преподаватель ищет глазами.
+     Сжимается только название проекта. */
+  .stuck-item .nm-row .nm{ flex:none; white-space:nowrap; }
+  .stuck-item .proj{ flex:0 1 auto; min-width:0; overflow:hidden;
+    text-overflow:ellipsis; white-space:nowrap; }
+}
+/* На телефоне название проекта переносится на свою строку, и точка-разделитель
+   в её начале выглядит мусором. */
+@media(max-width:820px){
+  .stuck-item .proj::before{ content:none; }
+}
+
+/* ── Шрифт программиста — только там, где он по делу ───────────────────────
+   Моноширинный нужен для двух вещей: код, который читают по символу, и
+   короткие обозначения вроде кода группы ROBO-7A, которые диктуют вслух.
+   Всё остальное — обычный текст, и набирать его шрифтом из редактора кода
+   незачем: страница начинает выглядеть как панель разработчика, а не как
+   журнал учителя. Цифры при этом не разъезжаются — у Inter есть табличные
+   знаки, в колонку они встают так же ровно. */
+.stuck-item .badge,
+table.mx thead th, table.mx thead th a, table.mx tbody td, table.mx tbody th,
+table.list th, .section-head .sub, .stat .l, .field label, .chip, .legend,
+.pcard .num, .pcard .meta, .who, .brand small, .demo-flag, .big div{
+  font-family:var(--sans) !important;
+}
+table.mx thead th, table.mx tbody td, .stuck-item .badge, .pcard .num{
+  font-variant-numeric:tabular-nums !important;
+}
+/* Разрядка была нужна моноширинному, чтобы буквы не слипались.
+   Обычному шрифту она только мешает читать. */
+.demo-flag{ letter-spacing:0 !important; font-size:11.5px !important; padding:5px 20px !important; }
+.chip, .legend, .pcard .meta{ letter-spacing:.02em !important; }
+table.mx thead th, table.mx tbody td{ letter-spacing:0 !important; }
+
+/* Страница урока. В книге моноширинным набраны не только листинги, но и
+   целые фразы — подписи разделов, правая колонка таблиц «если не работает»,
+   названия деталей. На бумаге это читалось как технический документ, на
+   экране — как машинный вывод. Возвращаем им обычный текст; листинги кода,
+   имена функций и обозначения выводов остаются моноширинными. */
+.lesson .part, .lesson .h-label, .lesson .q, .lesson .lang, .lesson .lib,
+.lesson .copy-btn, .lesson td.target, .lesson td.pin, .lesson th,
+.lesson .qty, .lesson .label, .lesson .cover-eyebrow, .lesson .locale-stamp,
+.lesson .row, .c-n{
+  font-family:var(--sans) !important;
+}
+.lesson td.target, .lesson td.pin, .lesson th, .lesson .part, .lesson .q{
+  letter-spacing:0 !important;
+}
+.lesson .qty, .c-n{ font-variant-numeric:tabular-nums !important; }
+/* Номера разделов в оглавлении и номера деталей в списке комплектующих —
+   это тоже просто числа, а не код. */
+.lesson .toc-row .n, .lesson .comp-head span{ font-family:var(--sans) !important;
+  font-variant-numeric:tabular-nums !important; letter-spacing:0 !important; }
+
+/* ── Подписи в уроках: слова, а не штампы ─────────────────────────────────
+   «ЧЕМУ НАУЧИШЬСЯ», «КОМПОНЕНТЫ», «ПРОБЛЕМА / РЕШЕНИЕ» были набраны
+   заглавными вразрядку. Слово человек узнаёт по форме целиком, а заглавные
+   вразрядку ломают форму и заставляют разбирать его по буквам — и вся
+   страница начинает выглядеть как подпись на приборной панели. Из кабинетов
+   мы это уже убрали, теперь и из уроков. Печатной книги правка не касается:
+   theme.css работает только на экране. */
+.lesson .h-label, .lesson .h-label.emph, .lesson .part, .lesson .lang,
+.lesson .copy-btn, .lesson th, .lesson .cover-eyebrow, .lesson .locale-stamp,
+.lesson .label{
+  text-transform:none !important;
+  letter-spacing:0 !important;
+}
+/* Раз это теперь заголовок, а не штамп, ему нужен вес и размер заголовка:
+   иначе строчными он потеряется в тексте, который стоит под ним. */
+.lesson .h-label{ font-size:12.4px !important; font-weight:600 !important;
+  color:var(--ink) !important; }
+.lesson .h-label.emph{ font-size:13.8px !important; }
+.lesson th{ font-size:11px !important; font-weight:600 !important; }
+
+/* Вход преподавателя — выбор из списка, под именем его группы.
+   Подпись моноширинным: это коды, а не текст для чтения. */
+.name-list button .sub{display:block;font-family:var(--mono);font-size:11px;
+  letter-spacing:.08em;color:var(--ink-3);margin-top:5px}
+.name-list button:hover .sub{color:var(--ink-2)}
+
+/* Переключатель групп — одна деталь, стоящая вплотную к заголовку, которому
+   она принадлежит. Раньше кнопки были прижаты к правому краю: между словом
+   и выбором лежала пустая полоса во весь экран, и глаз их не связывал.
+
+   Кнопки соединены в один блок с общей рамкой, а не рассыпаны отдельными
+   таблетками: это один выбор из нескольких, и выглядеть он должен как одна
+   вещь. Цветом залита только выбранная — тёмно-синий здесь «выбрано», а не
+   смысловой цвет статуса. */
+.section-head.has-sw{ flex-wrap:wrap; }
+.gsw{ align-self:center; margin-left:18px; display:inline-flex; max-width:100%;
+  overflow-x:auto; border:1px solid var(--rule-strong); border-radius:var(--r-sm);
+  background:var(--paper-2); }
+.gsw button{ flex:none; border:0; border-left:1px solid var(--rule); background:transparent;
+  color:var(--ink-2); padding:8px 15px; font-family:var(--sans); font-size:13.5px;
+  line-height:1.2; white-space:nowrap; cursor:pointer; transition:.12s; }
+.gsw button:first-child{ border-left:0; }
+.gsw button:hover{ background:var(--paper-3); color:var(--ink); }
+.gsw button.on{ background:var(--navy); color:#FFF; font-weight:600; }
+.gsw button.on + button{ border-left-color:var(--navy); }
+
+/* Выпадающий список — на случай школы, где групп больше шести и ряд кнопок
+   в строку уже не помещается. */
+.gsw:has(select){ border:0; background:transparent; overflow:visible; }
+.gsw select{ border:1px solid var(--rule-strong); background:var(--paper-2); color:var(--ink);
+  padding:8px 13px; border-radius:var(--r-sm); font-family:var(--sans); font-size:13.5px;
+  line-height:1.2; cursor:pointer; }
+.gsw select:hover{ border-color:var(--navy); }
+.gsw select:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(37,99,235,.14); outline:0; }
+
+@media(max-width:640px){
+  /* На телефоне переключатель уходит под заголовок и прокручивается вбок
+     внутри себя, если групп много. Страницу вбок он при этом не тянет. */
+  .gsw{ margin-left:0; margin-top:10px; }
+}
+
+/* Шапка тянется во всю ширину окна, а содержимое страницы остаётся в колонке
+   1560px. Логотип и кнопка выхода прижаты к краям экрана, а не к краям текста:
+   так шапка работает рамкой страницы и на широком мониторе не выглядит
+   зажатой в середине. Высота снижена с 118 до 84 (и с 108 до 78), знак с 84
+   до 58 — по просьбе директора: минимально, тихо, меньше шума. Экран и так
+   невысокий, а сверху ещё служебная полоса демо-режима. */
+
+/* Урок на окне 900-1140 пикселей уезжал вбок примерно на 25 пикселей.
+   Причина в том, что страница урока — это вёрстка печатного листа А4,
+   увеличенная множителем zoom. Слева стоит колонка меню шириной 320,
+   и в этом промежутке ширин увеличенному листу уже не хватает места,
+   а меню ещё не сворачивается в кнопку — оно уходит в кнопку только
+   ниже 900. Правится уменьшением множителя ровно в этом промежутке:
+   текст чуть мельче, зато страница не ползёт вбок.
+   Проверено на проектах 01, 07 и 16 при ширинах 901-1200. */
+/* ЗАПЛАТКИ УБРАНЫ. Здесь стояло уменьшение множителя до 0.98 и 1.06 для
+   диапазона 901-1140: страница урока уезжала вбок, потому что рельса
+   занимала место, а уроку его не хватало. Лечили размером текста — то
+   есть платили читаемостью за чужую проблему, и всё равно не до конца
+   (замер показал перелив +66 на 901 даже после этой заплатки).
+
+   Причина убрана в шаблоне-курса: с 1140 и ниже рельса уходит за край и
+   вызывается кнопкой. Места уроку хватает, множитель обычный. */
+
+/* ============ ТИШЕ: единая шкала кегля для платформы ============
+
+   Замер показал, что громкий ярус набран примерно на четверть крупнее,
+   чем принято в рабочих инструментах: заголовок раздела 31, название
+   проекта 22, число в синем блоке 64, число на дашборде 46. Отсюда
+   ощущение, что «всё увеличено»: экран кричит там, где должен спокойно
+   показывать данные.
+
+   Спокойный текст — 15 пикселей — не трогаю: его читают дети, и он в норме.
+   Уменьшен только громкий ярус, примерно на пятую часть. Пропорции между
+   ступенями сохранены, поэтому иерархия не поехала: заголовок по-прежнему
+   заметно крупнее названия карточки, а число — крупнее всего.
+
+   Страницы уроков этой шкалы не касаются: там свой множитель, выверенный
+   отдельно по длине строки. */
+
+.section-head h2{ font-size:25px !important; }
+.pcard h3{ font-size:17.5px !important; line-height:1.3 !important; }
+.hero .big{ font-size:46px !important; }
+.hero .grow > div:first-child{ font-size:21px !important; }
+.stat .v{ font-size:34px !important; }
+.stat .v small{ font-size:13.5px !important; }
+.stat .l{ font-size:13.5px !important; }
+.mark{ font-size:14px !important; }
+.btn{ font-size:14px !important; }
+.topbar .btn{ font-size:14px !important; padding:9px 18px !important; }
+.stuck-item .btn.sm{ font-size:14px !important; }
+
+@media(max-width:1024px){
+  .section-head h2{ font-size:22px !important; }
+  .hero .big{ font-size:38px !important; }
+  .stat .v{ font-size:29px !important; }
+}
+
+/* ---- второй проход по кеглю: то, что осталось громким ----
+   Первый проход накрыл кабинет ученика и дашборд, а экран преподавателя
+   жил своими размерами и остался прежним — отсюда «не вижу разницы».
+   Здесь добиты остатки: имена в списке помощи, цитаты, кнопки, ячейки
+   матрицы, счётчики. Ориентир тот же: спокойный текст 15 не трогаем,
+   громкий ярус приводим к 13.5-16. */
+.stuck-item .nm-row .nm{ font-size:15.5px !important; }
+.stuck-item .nm{ font-size:15.5px !important; }
+.stuck-item .proj{ font-size:13.5px !important; }
+.stuck-item .qt{ font-size:14px !important; padding:9px 13px !important; }
+.stuck-item .muted{ font-size:13.5px !important; }
+.stuck-item .badge{ width:34px !important; height:34px !important; font-size:13px !important; }
+#lopen{ font-size:14px !important; padding:10px 19px !important; }
+.btn.primary{ font-size:14px !important; }
+.topbar .who b{ font-size:15px !important; }
+.section-head h2 .cnt{ font-size:13px !important; min-width:26px !important; height:26px !important; }
+table.mx tbody th{ font-size:15px !important; }
+table.mx tbody td:last-child{ font-size:15px !important; }
+.cardh{ font-size:16px !important; }
+.empty .t{ font-size:16px !important; }
+
+/* ---- светлая полоса внизу экрана входа ----
+   Синяя панель с фотографией была прибита к окну (position:fixed) и
+   закрывала ровно видимую часть. Если страница оказывалась хоть немного
+   длиннее окна, ниже оставалась незакрашенная полоса цвета фона — и на
+   снимке всей страницы, и живьём при короткой прокрутке. Теперь панель
+   привязана не к окну, а ко всей странице: где бы та ни кончалась,
+   панель кончается вместе с ней. */
+#app:has(.login-bg){ position:relative; min-height:100vh; display:flow-root; }
+#app:has(.login-bg) .login-bg{ position:absolute !important; }
+/* display:flow-root — чтобы нижний отступ блока входа не «вытекал» наружу.
+   Из-за него страница считалась на три десятка пикселей длиннее, чем есть,
+   и панель, доходя до конца страницы, всё равно не закрывала этот хвост. */
+
+/* ---- третий проход: экран входа ----
+   Он оставался самым громким местом на сайте: «Кто ты?» набрано 46-м
+   кеглем, надпись на фотографии тоже 46-м. Первое, что видит директор,
+   и оно кричало. Приведено к той же шкале, что и остальная платформа. */
+.login h1{ font-size:33px !important; line-height:1.1 !important; }
+.role b{ font-size:15.5px !important; }
+.login-bg-cap .n{ font-size:34px !important; }
+.login-bg-cap .t{ font-size:15px !important; max-width:30ch !important; }
+
+/* ---- последняя ступень вниз ----
+   Замер экрана: при вкладке на 100% всё рисуется примерно на 12% крупнее
+   CSS-пикселей — системное увеличение дисплея. Такое же увеличение стоит на
+   большинстве школьных ноутбуков, поэтому поправка на него разумна.
+
+   Снята ещё одна десятая с громкого яруса. Спокойный текст 15 и мелкие
+   подписи 13.5 не тронуты второй раз подряд — это порог читаемости, а курс
+   смотрят дети. Дальше вниз не идём: следующая ступень уводит платформу за
+   нижнюю границу нормы для рабочих инструментов. */
+.section-head h2{ font-size:22.5px !important; }
+.pcard h3{ font-size:16px !important; }
+.hero .big{ font-size:40px !important; }
+.hero .grow > div:first-child{ font-size:19px !important; }
+.stat .v{ font-size:30px !important; }
+.login h1{ font-size:29px !important; }
+.login-bg-cap .n{ font-size:30px !important; }
+.stuck-item .nm-row .nm, .stuck-item .nm{ font-size:15px !important; }
+table.mx tbody th, table.mx tbody td:last-child{ font-size:14px !important; }
+.cardh{ font-size:15px !important; }
+@media(max-width:1024px){
+  .section-head h2{ font-size:20px !important; }
+  .hero .big{ font-size:34px !important; }
+  .stat .v{ font-size:26px !important; }
+}
+
+/* ============ МИНУС ДЕСЯТАЯ ЧАСТЬ ПО ВСЕМУ ============
+
+   Максат впервые посмотрел платформу в настоящем масштабе — обоими
+   браузерами на честных 100%, замер подтвердил один к одному — и попросил
+   размер, который даёт масштаб 90%. То есть равномерное уменьшение всего
+   яруса на десятую часть, а не выборочное.
+
+   Сделано умножением каждой ступени на 0.9 с сохранением пропорций.
+   Спокойный текст стал 13.5 — это нижняя граница, дальше уже неудобно
+   читать подряд, и ниже я не пойду.
+
+   Страницы уроков не затронуты: там свой множитель, выверенный по длине
+   строки, и правило ограничено body:not(.course). */
+
+body:not(.course){ font-size:13.5px !important; }
+body:not(.course) .lede{ font-size:13.5px !important; }
+.section-head h2{ font-size:20px !important; }
+.section-head .sub{ font-size:12px !important; }
+.pcard h3{ font-size:14.5px !important; }
+.pcard .num{ font-size:11px !important; }
+.hero .big{ font-size:36px !important; }
+.hero .grow > div:first-child{ font-size:17px !important; }
+.stat .v{ font-size:27px !important; }
+.stat .v small{ font-size:12px !important; }
+.stat .l{ font-size:12px !important; }
+.login h1{ font-size:26px !important; }
+.login .lede{ font-size:13.5px !important; }
+.role b{ font-size:14px !important; }
+.login-bg-cap .n{ font-size:27px !important; }
+.login-bg-cap .t{ font-size:13.5px !important; }
+.stuck-item .nm-row .nm, .stuck-item .nm{ font-size:13.5px !important; }
+.stuck-item .proj{ font-size:12px !important; }
+.stuck-item .qt{ font-size:12.5px !important; }
+.stuck-item .when{ font-size:12px !important; }
+.stuck-item .badge{ width:31px !important; height:31px !important; font-size:11.5px !important; }
+.btn, .mark, .topbar .btn, #lopen, .btn.primary, .stuck-item .btn.sm{ font-size:12.5px !important; }
+.gsw button, .gsw select{ font-size:12px !important; }
+table.list th, table.list td{ font-size:12px !important; }
+table.mx tbody th, table.mx tbody td:last-child{ font-size:13px !important; }
+.cardh{ font-size:13.5px !important; }
+.topbar .who{ font-size:12px !important; }
+.topbar .who b{ font-size:13.5px !important; }
+.empty .t{ font-size:14.5px !important; }
+.demo-flag{ font-size:10.5px !important; }
+.legend, .chip{ font-size:11px !important; }
+
+@media(max-width:1024px){
+  .section-head h2{ font-size:18px !important; }
+  .hero .big{ font-size:30px !important; }
+  .stat .v{ font-size:23px !important; }
+}
+
+/* ============ ТАБЛИЦА «ПРОГРЕСС КАЖДОГО»: ПЛОТНЕЕ ============
+
+   Таблица выглядела растянутой: номера проектов сверху были набраны
+   тем же кеглем, что и обычный текст, клетки 36 на 36, строки с большими
+   отступами. На двадцати пяти учениках это превращалось в простыню,
+   по которой глазу далеко ехать.
+
+   Номера сверху — это подписи осей, а не текст для чтения: им хватает
+   мелкого моноширинного. Клетки уменьшены, строки поджаты. Смысл таблицы
+   в том, чтобы вся группа помещалась на один экран, — теперь помещается
+   заметно больше.
+
+   Переключатель групп рядом с заголовком тоже поджат: он служебный. */
+
+table.mx thead th{ font-size:11px !important; padding:6px 3px !important; }
+table.mx thead th a.mxh{ padding:1px 2px !important; }
+table.mx td.cell{ width:29px !important; height:29px !important; font-size:12px !important; }
+table.mx tbody th{ font-size:12.5px !important; padding:5px 12px !important; }
+table.mx tbody td:last-child{ font-size:12.5px !important; padding:0 12px !important; }
+table.mx tbody tr.mx-grp th{ font-size:12.5px !important; padding:7px 12px !important; }
+table.mx tbody tr.mx-grp th .s{ font-size:11.5px !important; }
+.legend{ font-size:11px !important; gap:12px !important; }
+
+.gsw button{ padding:5px 11px !important; font-size:11.5px !important; }
+.gsw select{ padding:5px 10px !important; font-size:11.5px !important; }
+
+@media(max-width:1024px){
+  table.mx td.cell{ width:26px !important; height:26px !important; }
+  table.mx tbody th{ padding:5px 9px !important; }
+}
+
+/* Таблица больше не растягивается на всю ширину карточки.
+   Раньше она была шириной 100%, клетки имели фиксированный размер, и весь
+   лишний простор доставался колонке с именами: между фамилией и первой
+   клеткой зияло полэкрана, и взгляд ехал через пустоту. Теперь ширина по
+   содержимому — имена, сразу за ними сетка. На узком экране карточка
+   по-прежнему прокручивается вбок. */
+table.mx{ width:auto !important; min-width:0 !important; }
+/* Карточка обжимается по таблице, а не тянется на всю ширину: иначе справа
+   от сетки оставалось пустое белое поле в пол-экрана, и блок выглядел
+   недоделанным. На узком экране карточка упирается в край и прокручивается. */
+.scrollx:has(table.mx){ display:inline-block; max-width:100%; vertical-align:top; }
+table.mx tbody th{ line-height:1.25 !important; max-width:300px !important; }
+table.mx tbody tr.mx-grp th{ white-space:normal !important; }
+
+/* ============ КАРТОЧКИ ПРОЕКТОВ: ТИШЕ И ПЛОТНЕЕ ============
+
+   Было не минималистично, и дело не в кегле. Каждая карточка несла две
+   кнопки во всю ширину, одна из которых — сплошная зелёная заливка. На
+   экране это давало восемь ярких полос подряд: глазу не за что зацепиться,
+   потому что кричит всё сразу. Плюс собранный проект помечался трижды —
+   цветом рамки, цветом фона карточки и заливкой кнопки.
+
+   Стало: одна отметка на один смысл. Карточка всегда белая, «собрал» —
+   тихая зелёная галочка с рамкой, а не залитая полоса. Красный фон оставлен
+   только у «застрял»: это единственное состояние, которое должно догонять
+   взглядом само.
+
+   Карточки уже: на широком экране их помещается шесть в ряд вместо четырёх,
+   и весь курс виден без прокрутки. «Не получается» стало тихой кнопкой —
+   ей пользуются редко, а место она занимала как главной. */
+
+.proj-grid{ grid-template-columns:repeat(auto-fill,minmax(212px,1fr)) !important;
+            gap:11px !important; }
+.pcard{ padding:11px 12px 12px !important; gap:7px !important; }
+.pcard h3{ font-size:13.5px !important; line-height:1.3 !important; font-weight:600 !important; }
+.pcard .num{ font-size:10px !important; }
+
+/* фон карточки — белый; тревога остаётся заметной */
+/* Собранный проект: бледная зелёная подложка + медаль на фото.
+
+   Почему заливка, а не рамка или одна галочка. Ребёнок обводит взглядом
+   17 карточек и отвечает себе на вопрос «где я уже был» — это задача на скан,
+   а на скан работает пятно цвета: его глаз ловит боковым зрением. Рамку в
+   1.5 пикселя боковое зрение не различает, а мелкую галочку внизу приходится
+   искать на каждой карточке отдельно.
+
+   Почему подложка бледная (--green-pale, а не --green-tint). Красный «застрял»
+   должен догонять взглядом сам, и если зелёного будет столько же по силе,
+   восемь собранных карточек его перекричат. Здесь зелёный слабее красного,
+   а у красного вдобавок своя рамка, плашка и цитата ученика.
+
+   Медаль — не дубль галочки, а награда за нажатие: ребёнок отметил проект и
+   получил знак на фото, а не переставил птичку в списке. Три уровня знака
+   работают вместе только потому, что они разного веса: пятно — для скана,
+   круг — для награды, кнопка внизу — это орган управления, она обязана
+   показывать своё состояние. */
+.pcard.done{ background:var(--green-pale) !important; border-color:var(--rule) !important; }
+.pcard .medal{ position:absolute; top:6px; right:6px; z-index:2;
+  width:26px; height:26px; border-radius:50%;
+  background:var(--green); color:#FFF;
+  font-size:14px; font-weight:700; line-height:1;
+  display:flex; align-items:center; justify-content:center;
+  border:2px solid #FFF; box-shadow:0 1px 4px rgba(0,0,0,.28); }
+.pcard.doing{ background:#FFF !important; border-color:var(--rule) !important; }
+.pcard.stuck{ background:var(--signal-tint) !important; border-color:var(--signal) !important; }
+
+/* ДВА ДЕЙСТВИЯ ВНИЗУ КАРТОЧКИ — «Собрал» и «Не получается».
+
+   Обе были кнопками в рамке с белой заливкой. На белой карточке это ещё
+   как-то жило, а на зелёной подложке собранного проекта белые плашки стали
+   заплатками: карточка зелёная, а по ней два белых прямоугольника.
+   Стало: обычный текст прямо на фоне карточки, без рамки и без заливки,
+   в одну строку. «Собрал» первым — это главное действие.
+
+   Заодно ушла целая порода баг с наведением. Общее правило .btn:hover
+   заливает кнопку тёмно-синим и делает буквы белыми, а .mark.on:hover —
+   тёмно-зелёным. Раньше здесь переопределяли только цвет текста и забывали
+   фон, из-за чего надпись пропадала: тёмное на тёмном. Теперь фона нет
+   вообще, и наведение меняет только цвет букв и подчёркивание — сломать
+   такое нечем.
+
+   Подчёркивание при наведении обязательно: карточка целиком нажимается и
+   открывает урок, поэтому текст без рамки надо как-то обозначить нажимаемым.
+   Не убирать. */
+
+.pcard .acts{ display:flex !important; align-items:center !important;
+  gap:15px !important; flex-wrap:wrap !important; margin-top:1px !important; }
+
+.pcard .acts .btn,
+.pcard .acts .mark{
+  background:transparent !important; border:0 !important;
+  padding:0 !important; border-radius:0 !important;
+  box-shadow:none !important; min-height:0 !important;
+  font-size:11.5px !important; font-weight:600 !important;
+  line-height:1.2 !important; text-decoration:none !important;
+  width:auto !important; align-self:auto !important; }
+
+/* НАВЕДЕНИЕ — без подчёркивания.
+
+   Подчёркивание на хороших сайтах закреплено за одним смыслом: ссылка,
+   которая куда-то ведёт. А эти две надписи никуда не ведут — одна
+   переключает отметку, вторая открывает окошко. Не тот сигнал.
+
+   Увеличивать надпись тоже не стали. Через font-size нельзя вообще:
+   страница пересчитывает раскладку, соседи дёргаются, а кнопка уезжает
+   из-под курсора. Через transform можно (раскладка не пересчитывается),
+   но на тексте 11.5px переход выглядит мыльным. Сильные продукты
+   увеличивают целые блоки — карточку, плитку, картинку, — а не подписи
+   внутри них.
+
+   Осталось два приёма, которые и работают:
+   1) цвет из тихого в полную силу, с переходом 130 мс — без перехода
+      получается мигание, именно плавность даёт ощущение аккуратной вещи;
+   2) реагирует сам орган управления: рамка галочки зеленеет, а внутри
+      проступает бледная галочка. Наведение показывает не «я подсвечен»,
+      а ЧТО СЛУЧИТСЯ от нажатия. Так сделано в хороших списках задач. */
+
+.pcard .acts .btn,
+.pcard .acts .mark,
+.pcard .acts .mark .box{
+  transition:color .13s ease, border-color .13s ease,
+             background-color .13s ease, opacity .13s ease,
+             transform .22s cubic-bezier(.34,1.5,.64,1) !important; }
+
+.pcard .acts .btn:hover,
+.pcard .acts .mark:hover{ background:transparent !important;
+  text-decoration:none !important; }
+
+/* РОСТ НАДПИСИ ПРИ НАВЕДЕНИИ.
+
+   Только через transform, никогда через font-size. font-size заставил бы
+   страницу пересчитать раскладку: соседние карточки дёрнулись бы, а сама
+   надпись уехала из-под курсора — и наведение сорвалось бы само себя.
+   transform раскладку не трогает вообще, он растягивает уже нарисованное
+   на месте, поэтому соседи стоят как вкопанные.
+
+   Оттуда же и плата за приём: браузер не набирает буквы заново в новом
+   размере, а растягивает готовые — как увеличенная фотография. В момент
+   роста надпись чуть мягче, чем в покое. На мелком тексте это цена
+   приёма, а не поломка; знать про неё надо, чтобы потом не искать
+   «почему буквы мутные».
+
+   transform-origin слева, чтобы левый край и квадратик-галочка стояли
+   на месте, а надпись росла только вправо.
+
+   ГЛАВНОЕ ПРО ВЕЛИЧИНУ РОСТА — расти должна не надпись, а квадратик.
+
+   История, чтобы не ходить по кругу. Сначала надпись росла на 7% —
+   Максат сказал «сильно прям». Опустили до 4% — стало почти незаметно.
+   Искать размер между ними бессмысленно, и вот почему: у текста в
+   11.5px 4% дают меньше половины пикселя, а 7% уже начинают косить
+   строку и мутить буквы. Окна между «незаметно» и «слишком» просто нет.
+
+   Пробовали взять заметность перелётом (надпись выскакивает за размер
+   и садится обратно) — не работает: перелёт пропорционален самому
+   росту, замер показал всего 1.054 на пике против 1.05 в конце. Это
+   ноль на глаз.
+
+   Что работает: квадратик-галочка. Он сплошная фигура 14px, и те же
+   проценты дают ему прирост в целые пиксели — видно с одного взгляда.
+   Плюс фигуры при растяжении не мутнеют, в отличие от букв: у квадрата
+   нет мелких деталей, которые размывает.
+
+   Поэтому надпись растёт скромно (1.04, почти незаметно и не косит
+   строку), а квадратик прыгает отчётливо (1.28 сверху, то есть около
+   1.33 вместе с ростом надписи). Переход с лёгким перелётом — на
+   сплошной фигуре его как раз видно.
+
+   Если попросят «ещё заметнее» — крутить масштаб КВАДРАТИКА, не текста.
+   Масштаб текста трогать последним.
+
+   Промежуток в .acts 15px: на росте между двумя действиями остаётся 12. */
+.pcard .acts .btn,
+.pcard .acts .mark{ transform-origin:left center !important; }
+.pcard .acts .btn:hover,
+.pcard .acts .mark:hover{ transform:scale(1.04) !important; }
+.pcard .acts .mark:hover .box{ transform:scale(1.28) !important; }
+
+/* Кому система велела не анимировать — тому без роста. Цвет остаётся:
+   он несёт смысл (что случится от нажатия), а рост — только украшение. */
+@media (prefers-reduced-motion: reduce){
+  .pcard .acts .btn:hover,
+  .pcard .acts .mark:hover,
+  .pcard .acts .mark:hover .box{ transform:none !important; }
+}
+
+/* «Собрал»: сама кнопка без рамки, но КВАДРАТИК-ГАЛОЧКА остаётся — иначе
+   у несобранного проекта не видно, куда нажимать, чтобы отметить.
+   Пустой квадрат = не отмечен, зелёный с галочкой = отмечен. Это обычная
+   галочка из любой анкеты, ребёнку объяснять не надо. НЕ УБИРАТЬ квадрат
+   у неотмеченного состояния: без него кнопка превращается в надпись,
+   и непонятно, что на неё вообще можно нажать. */
+.pcard .acts .mark{ gap:6px !important; color:var(--ink-2) !important; }
+.pcard .acts .mark .box{ box-sizing:border-box !important;
+  width:14px !important; height:14px !important; flex:0 0 14px !important;
+  border:1.5px solid var(--rule-strong) !important; border-radius:3px !important;
+  background:#FFF !important; color:transparent !important;
+  font-size:10px !important; line-height:1 !important;
+  display:flex !important; align-items:center !important; justify-content:center !important; }
+.pcard .acts .mark.on{ color:var(--green-dark) !important; }
+.pcard .acts .mark.on .box{ background:var(--green) !important;
+  border-color:var(--green) !important; color:#FFF !important; }
+/* Не отмечен + наведение: буквы в полную силу, рамка квадрата зеленеет,
+   и внутри проступает бледная галочка — предпросмотр нажатия. */
+.pcard .acts .mark:not(.on):hover{ color:var(--ink) !important; }
+.pcard .acts .mark:not(.on):hover .box{ border-color:var(--green) !important; }
+.pcard .acts .mark:not(.on):hover .box::after{ content:'✓';
+  color:var(--green) !important; opacity:.45; font-size:10px; line-height:1; }
+
+/* Отмечен + наведение: зелёный темнеет — понятно, что нажатие снимет отметку. */
+.pcard .acts .mark.on:hover{ color:var(--green-dark) !important; }
+.pcard .acts .mark.on:hover .box{ background:var(--green-dark) !important;
+  border-color:var(--green-dark) !important; }
+
+/* «Не получается» — тише «Собрал», это редкое действие */
+.pcard .acts .btn{ color:var(--ink-3) !important; font-weight:400 !important; }
+.pcard .acts .btn:hover{ color:var(--ink) !important; }
+
+/* метка «Следующий» — обычными буквами, без разрядки */
+.chip{ text-transform:none !important; letter-spacing:0 !important;
+  font-size:10.5px !important; padding:2px 8px !important; }
+.pcard .note{ font-size:11.5px !important; padding:6px 9px !important; }
+
+@media(max-width:1024px){
+  .proj-grid{ grid-template-columns:repeat(auto-fill,minmax(180px,1fr)) !important; }
+}
